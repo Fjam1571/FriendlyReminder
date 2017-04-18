@@ -7,7 +7,7 @@
     tools:context="com.fjamtechnology.friendlyreminder.Register">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/RegUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="59dp"
@@ -23,23 +23,23 @@
         tools:layout_constraintTop_creator="1" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/RegEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:ems="10"
         android:hint="Email"
-        android:inputType="textEmailAddress"
+        android:inputType="textEmailAddress|textWebEmailAddress"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/editText"
-        app:layout_constraintRight_toRightOf="@+id/editText"
-        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintLeft_toLeftOf="@+id/RegUsername"
+        app:layout_constraintRight_toRightOf="@+id/RegUsername"
+        app:layout_constraintTop_toBottomOf="@+id/RegUsername"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/RegPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
@@ -47,15 +47,15 @@
         android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/editText2"
-        app:layout_constraintRight_toRightOf="@+id/editText2"
-        app:layout_constraintTop_toBottomOf="@+id/editText2"
+        app:layout_constraintLeft_toLeftOf="@+id/RegEmail"
+        app:layout_constraintRight_toRightOf="@+id/RegEmail"
+        app:layout_constraintTop_toBottomOf="@+id/RegEmail"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/RegPasswordVerif"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
@@ -63,22 +63,22 @@
         android:hint="Verify Password"
         android:inputType="textPassword"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/editText3"
-        app:layout_constraintRight_toRightOf="@+id/editText3"
-        app:layout_constraintTop_toBottomOf="@+id/editText3"
+        app:layout_constraintLeft_toLeftOf="@+id/RegPassword"
+        app:layout_constraintRight_toRightOf="@+id/RegPassword"
+        app:layout_constraintTop_toBottomOf="@+id/RegPassword"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />
 
     <Button
-        android:id="@+id/Register"
+        android:id="@+id/RegisterBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="51dp"
         android:text="Register"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText4"
+        app:layout_constraintTop_toBottomOf="@+id/RegPasswordVerif"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1" />

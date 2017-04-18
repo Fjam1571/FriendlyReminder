@@ -1,8 +1,12 @@
 package com.fjamtechnology.friendlyreminder;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Franc on 4/17/2017.
@@ -17,9 +21,8 @@ public class DBHelper extends SQLiteOpenHelper {
             "`idUser`INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE," +
             "`Username` TEXT UNIQUE," +
             "`Password` TEXT," +
-            "`Email` TEXT " +
+            "`Email` TEXT UNIQUE" +
             "); " +
-            "','password','admin@admin.com'); " +
             "CREATE TABLE `Reminders` (" +
             " `RemindersID` INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " +
             " `MarkersID` INTEGER, " +
@@ -55,5 +58,53 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
+
+    public long RegistrationPage(String Username, String Password, String Email){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        Password = md5(Password);
+
+        values.put("Username", Username);
+        values.put("Password", Password);
+        values.put("Email", Email);
+
+        long Return = db.insert("User", null, values);
+
+        return Return;
+
+    }
+
+    //////// Password Encryption MD5 /////////////////////////////////
+
+    public static final String md5(final String Password) {
+        final String MD5 = "MD5";
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
+            digest.update(Password.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+    ///////////////////////////////////////////////////////////////////
+
+
 
 }
