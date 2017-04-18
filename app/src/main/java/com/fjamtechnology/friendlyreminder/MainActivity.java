@@ -1,6 +1,7 @@
 package com.fjamtechnology.friendlyreminder;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,24 +12,26 @@ public class MainActivity extends AppCompatActivity {
 
     //test
 
+    Button btnRegister;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         /// Open Register page ///
-        Button btn = (Button)findViewById(R.id.Register);
-        btn.setOnClickListener(new View.OnClickListener() {
+        btnRegister = (Button)findViewById(R.id.Register);
+        btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, Register.class));
-                
+
             }
         });
         //////////////////////////
 
         Button btn2 = (Button)findViewById(R.id.SignIn);
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SignIn();
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void SignIn (){
+        String Userpass;
 
         EditText UsernameText = (EditText)findViewById(R.id.Username);
         String Username = UsernameText.getText().toString();
@@ -45,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
         EditText PasswordText = (EditText)findViewById(R.id.Password);
         String Password = PasswordText.getText().toString();
 
-
+        DBHelper helper = new DBHelper(this);
+        SQLiteDatabase db = helper.getReadableDatabase();
 
     }
 
