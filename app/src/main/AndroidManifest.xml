@@ -17,7 +17,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".Register" />
-        <activity android:name=".DatabaseView"></activity>
+        <activity
+            android:name=".ReminderMap"
+            android:label="@string/title_activity_reminder_map"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

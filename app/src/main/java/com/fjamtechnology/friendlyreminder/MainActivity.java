@@ -6,8 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    boolean EmptyUsername = true;
+    boolean EmptyPassword = true;
+
+    final String EmptyUsernameSTR = "Please Enter Your Username";
+    final String EmptyPasswordSTR = "Pleaes Enter Your Password";
+    final String EmptyUsernamePassword = "Please Make Sure You Have Filled In Credentials";
+    final String NoUserFound = "The User Is Not Registerd Please Create An Account";
+    final String PassNotCorrect = "Please Try Entering Password Again";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +43,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button ViewDBBtn = (Button)findViewById(R.id.ViewDB);
-        ViewDBBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, DatabaseView.class));
-            }
-        });
-
     }
 
     public void SignIn (){
+
+        String Pass;
+        DBHelper helper = new DBHelper(this);
 
         EditText UsernameText = (EditText)findViewById(R.id.Username);
         String Username = UsernameText.getText().toString();
@@ -51,6 +56,31 @@ public class MainActivity extends AppCompatActivity {
         EditText PasswordText = (EditText)findViewById(R.id.Password);
         String Password = PasswordText.getText().toString();
 
+        EmptyUsername = Username.isEmpty();
+        EmptyPassword = Password.isEmpty();
+
+        if(EmptyUsername == true && EmptyPassword == true){
+            Toast.makeText(getApplicationContext(), EmptyUsernamePassword, Toast.LENGTH_LONG).show();
+        }else if(EmptyUsername == true){
+            Toast.makeText(getApplicationContext(), EmptyUsernameSTR, Toast.LENGTH_LONG).show();
+        }else if(EmptyPassword == true){
+            Toast.makeText(getApplicationContext(), EmptyPasswordSTR, Toast.LENGTH_LONG).show();
+        }else if(EmptyUsername == false && EmptyPassword == false){
+
+            Password = helper.md5(Password);
+            Pass = helper.Verification(Username);
+
+            if(Pass == null){
+                Toast.makeText(getApplicationContext(), NoUserFound, Toast.LENGTH_LONG).show();
+            }else if(Pass.equals(Password)){
+                startActivity(new Intent(MainActivity.this, ReminderMap.class));
+                PasswordText.setText("");
+            }else if(Pass != Password){
+                Toast.makeText(getApplicationContext(), PassNotCorrect, Toast.LENGTH_LONG).show();
+                PasswordText.setText("");
+            }
+
+        }
     }
 
 

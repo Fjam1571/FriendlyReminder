@@ -1,5 +1,6 @@
 package com.fjamtechnology.friendlyreminder;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -71,9 +72,26 @@ public class Register extends AppCompatActivity {
             if (Response < 0) {
                 Toast.makeText(getApplicationContext(), UnSuccesfulReg, Toast.LENGTH_LONG).show();
             } else if (Response > 0) {
-                Toast.makeText(getApplicationContext(), SuccesfulReg, Toast.LENGTH_LONG).show();
-            }
+         ///////////////////////////////////////////////////////////////////////////////////////////
+                Toast.makeText(this.getApplicationContext(), SuccesfulReg, Toast.LENGTH_LONG).show();
 
+                final Intent intent = new Intent(this, MainActivity.class);
+
+                Thread thread = new Thread(){
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(Toast.LENGTH_LONG);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                thread.start();
+            }
+         ///////////////////////////////////////////////////////////////////////////////////////////
         }else if(UserEmpty == true && ValidEmail == false && PassMatch == false){
             Toast.makeText(getApplicationContext(), NoEntries, Toast.LENGTH_LONG).show();
         }else if(Username.isEmpty() == true) {

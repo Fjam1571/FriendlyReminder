@@ -2,6 +2,7 @@ package com.fjamtechnology.friendlyreminder;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -77,9 +78,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    //////// Password Encryption MD5 /////////////////////////////////
+    //////// Password Encryption MD5 ///////////////////////////////////////////////////////////////
 
-    public static final String md5(final String Password) {
+    public String md5(final String Password) {
         final String MD5 = "MD5";
         try {
             // Create MD5 Hash
@@ -103,8 +104,27 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return "";
     }
-    ///////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    ///////// Verify User Exists and Password matches //////////////////////////////////////////////
+    public String Verification(final String Username){
+        String Pass = null;
 
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.query
+        ("User", new String[] {"Password"}, "Username = ?", new String[]{Username}, null, null, null);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            return Pass;
+        }else{
+            Pass = cursor.getString(0);
+            return Pass;
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
