@@ -1,11 +1,11 @@
 package com.fjamtechnology.friendlyreminder;
 
 import android.content.res.ColorStateList;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,10 +15,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class ReminderMap extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback{
+
+    private GoogleMap mMap;
+    private Marker mSydney;
+    private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +38,23 @@ public class ReminderMap extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ///// Map //////////////////////////////////////////////////////////////////////////////////
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        //// FAB ///////////////////////////////////////////////////////////////////////////////////
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setImageResource(R.drawable.marker);
         fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#33691E")));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
             }
         });
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -46,9 +64,6 @@ public class ReminderMap extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        ///// Map //////////////////////////////////////////////////////////////////////////////////
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.MapFrag);
 
     }
 
@@ -108,4 +123,62 @@ public class ReminderMap extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        //// Declaring Cursors and DB /////////
+        Cursor c ;
+        DBHelper dbHelper = new DBHelper(this);
+        c = dbHelper.getAllLocations();
+
+        //// Variables for Markers ///////
+        String Name;
+        String[] LatLong;
+        double lat, lon;
+        String MarkerName;
+        int NumbMarkers = c.getCount();
+
+        mMap = map;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+
+        //// Checking For Markers //////////////////////////////////////////////////////////////////
+        if(NumbMarkers > 0){
+            ////Zoom On Markers ///////////
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+            c.moveToFirst();
+            for(int i = 0; i < NumbMarkers;){
+                //// Declaring Temp Variables ////
+                Name = c.getString(0);
+                MarkerName = Name;
+
+                //// Getting Variables From DB ////
+                LatLong = c.getString(1).split(",");
+                lat = Double.parseDouble(LatLong[0]);
+                lon = Double.parseDouble(LatLong[1]);
+                LatLng LatLngMarker = new LatLng(lat, lon);
+
+                //// Adding Bounds To Builder ////
+                builder.include(LatLngMarker);
+
+                mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name));
+
+                i++;
+                c.move(i);
+
+            }
+
+            //// Moving Camera To Maker Bounds ////
+            LatLngBounds bounds = builder.build();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 500));
+
+            c.close();
+        }else{
+            c.close();
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+    }
+
+
 }
