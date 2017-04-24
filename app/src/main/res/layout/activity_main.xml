@@ -10,7 +10,7 @@
         android:id="@+id/Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="194dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintHorizontal_bias="0.502"
@@ -69,5 +69,13 @@
         android:layout_marginEnd="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp" />
+
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        tools:layout_editor_absoluteY="-161dp"
+        tools:layout_editor_absoluteX="0dp" />
 
 </android.support.constraint.ConstraintLayout>
