@@ -29,8 +29,8 @@ public class ReminderMap extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback{
 
     private GoogleMap mMap;
-    private Marker mSydney;
-    private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class ReminderMap extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+               
             }
         });
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,8 +66,12 @@ public class ReminderMap extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        
+
 
     }
+    
+    
 
     @Override
     public void onBackPressed() {
@@ -194,6 +198,28 @@ public class ReminderMap extends AppCompatActivity
 
         });
         ////////////////////////
+
+
+        // Setting a long click event handler for the map toadd a marker
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+                // Creating a marker
+                MarkerOptions markerOptions = new MarkerOptions();
+
+                // Setting the position for the marker
+                markerOptions.position(latLng);
+
+                // Setting the title for the marker.
+                // This will be displayed on taping the marker
+                markerOptions.title(latLng.latitude + " : " + latLng.longitude);
+
+                // Placing a marker on the touched position
+                mMap.addMarker(markerOptions);
+            }
+        });
 
 
 
