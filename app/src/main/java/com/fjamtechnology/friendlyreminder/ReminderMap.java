@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +43,7 @@ public class ReminderMap extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         ////////////////////////////////////////////////////////////////////////////////////////////
 
         //// FAB ///////////////////////////////////////////////////////////////////////////////////
@@ -161,7 +163,7 @@ public class ReminderMap extends AppCompatActivity
                 //// Adding Bounds To Builder ////
                 builder.include(LatLngMarker);
 
-                mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name));
+                mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name)).showInfoWindow();
 
                 i++;
                 c.move(i);
@@ -177,6 +179,25 @@ public class ReminderMap extends AppCompatActivity
             c.close();
         }
         ////////////////////////////////////////////////////////////////////////////////////////////
+
+        //// Click Listener ////
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+        {
+
+            @Override
+            public boolean onMarkerClick(Marker arg0) {
+                String title;
+                title = arg0.getTitle();
+                Toast.makeText(getApplicationContext(), title, Toast.LENGTH_LONG).show();
+                return true;
+            }
+
+        });
+        ////////////////////////
+
+
+
+
 
     }
 
