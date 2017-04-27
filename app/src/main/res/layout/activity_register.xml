@@ -58,7 +58,7 @@
         android:id="@+id/RegPasswordVerif"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="98dp"
+        android:layout_marginTop="122dp"
         android:ems="10"
         android:hint="Verify Password"
         android:inputType="textPassword"
@@ -85,8 +85,8 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="210dp"
-        android:layout_height="81dp"
+        android:layout_width="201dp"
+        android:layout_height="107dp"
         android:text="Password Must Contain: \n 12 characters long \n Uppercase Letter \n Lowercase Letter \n Number \n Special Character: @#$%^+=!"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
@@ -98,5 +98,6 @@
         android:layout_marginBottom="56dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@+id/RegPassword"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.502" />
 </android.support.constraint.ConstraintLayout>
