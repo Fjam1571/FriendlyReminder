@@ -1,5 +1,6 @@
 package com.fjamtechnology.friendlyreminder;
 
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -29,8 +31,8 @@ public class ReminderMap extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback{
 
     private GoogleMap mMap;
-    private Marker mSydney;
-    private static final LatLng SYDNEY = new LatLng(-33.87365, 151.20689);
+    private LatLng mClickPos;
+    String test = "test";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,13 +195,25 @@ public class ReminderMap extends AppCompatActivity
             }
 
         });
-        ////////////////////////
 
+        //// Long Click Add Marker /////////////////////////////////////////////////////////////////
+        ////
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                mClickPos = latLng;
+                new AlertDialog.Builder(ReminderMap.this)
+                        .setPositiveButton("Create", ReminderMap.this)
+                        .setNegativeButton("Cancel", null)
+                        .setMessage(latLng.toString())
+                        .show();
+            }
+        });
+        ////
     }
 
-    public void idc(){
-
+    public void onClick(DialogInterface dialog, int which) {
+        Toast.makeText(getApplicationContext(), test, Toast.LENGTH_LONG).show();
     }
-
 
 }

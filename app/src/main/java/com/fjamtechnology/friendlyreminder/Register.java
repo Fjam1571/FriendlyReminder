@@ -15,6 +15,7 @@ public class Register extends AppCompatActivity {
 
     long Response;
     boolean ValidEmail;
+    boolean ValidPass;
     boolean PassMatch;
     boolean UserEmpty;
 
@@ -22,6 +23,7 @@ public class Register extends AppCompatActivity {
     final String UnSuccesfulReg = "The Username Is Already Taken Or The Email Has Been Used To Register Already";
     final String EmptyUsername = "Please Enter A Username";
     final String InvalidEmail = "Please Enter A Valid Email";
+    final String InvalidPass = "Please Enter A Valid Password";
     final String PassDontMatch = "The Passwords Don't Match";
     final String NoEntries = "Please Fill Form To Register";
 
@@ -60,10 +62,11 @@ public class Register extends AppCompatActivity {
 
         // Checking Paramaters
         ValidEmail = isEmailValid(Email);
+        ValidPass = isPassValid(Password);
         PassMatch = PasswordMatch(Password, PasswordVerif);
         UserEmpty = Username.isEmpty();
 
-        if (ValidEmail == true && PassMatch == true && UserEmpty == false) {
+        if (ValidEmail == true && ValidPass == true && PassMatch == true && UserEmpty == false) {
 
             DBHelper db = new DBHelper(this);
 
@@ -94,10 +97,12 @@ public class Register extends AppCompatActivity {
          ///////////////////////////////////////////////////////////////////////////////////////////
         }else if(UserEmpty == true && ValidEmail == false && PassMatch == false){
             Toast.makeText(getApplicationContext(), NoEntries, Toast.LENGTH_LONG).show();
-        }else if(Username.isEmpty() == true) {
+        }else if(UserEmpty == true) {
             Toast.makeText(getApplicationContext(), EmptyUsername, Toast.LENGTH_LONG).show();
         }else if(ValidEmail == false){
             Toast.makeText(getApplicationContext(), InvalidEmail, Toast.LENGTH_LONG).show();
+        }else if(ValidPass == false){
+            Toast.makeText(getApplicationContext(), InvalidPass, Toast.LENGTH_LONG).show();
         }else if(PassMatch == false){
             Toast.makeText(getApplicationContext(), PassDontMatch, Toast.LENGTH_LONG).show();
         }
@@ -113,6 +118,21 @@ public class Register extends AppCompatActivity {
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(inputStr);
         if (matcher.matches()) {
+            isValid = true;
+        }
+        return isValid;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static boolean isPassValid(String Pass) {
+        boolean isValid = false;
+
+        String expression1 = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{5,}$";
+        CharSequence inputStr = Pass;
+
+        Pattern pattern1 = Pattern.compile(expression1, Pattern.CASE_INSENSITIVE);
+        Matcher matcher1 = pattern1.matcher(inputStr);
+        if (matcher1.matches()) {
             isValid = true;
         }
         return isValid;
