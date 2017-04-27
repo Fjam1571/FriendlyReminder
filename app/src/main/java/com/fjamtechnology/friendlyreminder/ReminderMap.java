@@ -197,7 +197,7 @@ public class ReminderMap extends AppCompatActivity
 
     }
 
-    public void idk(){
+    public void idd(){
 
     }
 
