@@ -6,8 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Created by Franc on 4/17/2017.
@@ -75,7 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
 
-        Password = md5(Password);
+        Password = BCrypt(Password);
 
         values.put("Username", Username);
         values.put("Password", Password);
@@ -87,33 +86,23 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    //////// Password Encryption MD5 ///////////////////////////////////////////////////////////////
+    //////// Password Encryption BCrypt ///////////////////////////////////////////////////////////////
 
-    public String md5(final String Password) {
-        final String MD5 = "MD5";
-        try {
-            // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest
-                    .getInstance(MD5);
-            digest.update(Password.getBytes());
-            byte messageDigest[] = digest.digest();
-
-            // Create Hex String
-            StringBuilder hexString = new StringBuilder();
-            for (byte aMessageDigest : messageDigest) {
-                String h = Integer.toHexString(0xFF & aMessageDigest);
-                while (h.length() < 2)
-                    h = "0" + h;
-                hexString.append(h);
-            }
-            return hexString.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
+    private String BCrypt(final String Password) {
+        String hash = BCrypt.hashpw(Password, BCrypt.gensalt());
+        return hash;
     }
+
+    public Boolean VerifyPass(final String Password, final String PasswordVerif){
+        boolean PassMatch;
+
+        PassMatch = BCrypt.checkpw(Password, PasswordVerif);
+
+        return  PassMatch;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     ///////// Verify User Exists and Password matches //////////////////////////////////////////////
     public String Verification(final String Username){

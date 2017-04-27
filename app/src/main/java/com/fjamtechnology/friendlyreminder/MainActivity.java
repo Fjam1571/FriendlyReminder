@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     public void SignIn (){
 
         String Pass;
+        boolean SamePass;
         DBHelper helper = new DBHelper(this);
 
         EditText UsernameText = (EditText)findViewById(R.id.Username);
@@ -67,15 +68,20 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), EmptyPasswordSTR, Toast.LENGTH_LONG).show();
         }else if(EmptyUsername == false && EmptyPassword == false){
 
-            Password = helper.md5(Password);
             Pass = helper.Verification(Username);
 
             if(Pass == null){
+                SamePass = false;
+            }else {
+                SamePass = helper.VerifyPass(Password, Pass);
+            }
+
+            if(Pass == null){
                 Toast.makeText(getApplicationContext(), NoUserFound, Toast.LENGTH_LONG).show();
-            }else if(Pass.equals(Password)){
+            }else if(SamePass == true){
                 startActivity(new Intent(MainActivity.this, ReminderMap.class));
                 PasswordText.setText("");
-            }else if(Pass != Password){
+            }else if(SamePass == false){
                 Toast.makeText(getApplicationContext(), PassNotCorrect, Toast.LENGTH_LONG).show();
                 PasswordText.setText("");
             }
