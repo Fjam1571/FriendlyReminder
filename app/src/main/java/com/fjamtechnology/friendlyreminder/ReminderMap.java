@@ -34,6 +34,10 @@ public class ReminderMap extends AppCompatActivity
     private LatLng mClickPos;
     String test = "test";
 
+    /**
+     * method run when activity is created
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +75,9 @@ public class ReminderMap extends AppCompatActivity
 
     }
 
+    /**
+     * method that determines if the back button was pressed and if the drawer is open to close it
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -81,6 +88,11 @@ public class ReminderMap extends AppCompatActivity
         }
     }
 
+    /**
+     * // Inflate the menu; this adds items to the action bar if it is present.
+     * @param menu the menu
+     * @return if created
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -88,6 +100,11 @@ public class ReminderMap extends AppCompatActivity
         return true;
     }
 
+    /**
+     * If an item in the menu has been selected
+     * @param item  the item
+     * @return returns the item selected
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -103,6 +120,11 @@ public class ReminderMap extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * it a navigation item is selected
+     * @param item the item
+     * @return the item selected
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -128,6 +150,10 @@ public class ReminderMap extends AppCompatActivity
         return true;
     }
 
+    /**
+     * code that will not run until the map has been created and is fully ready
+     * @param map the google map
+     */
     @Override
     public void onMapReady(GoogleMap map) {
         //// Declaring Cursors and DB /////////
@@ -211,6 +237,7 @@ public class ReminderMap extends AppCompatActivity
         });
         ////
     }
+
 
     public void onClick(DialogInterface dialog, int which) {
         Toast.makeText(getApplicationContext(), test, Toast.LENGTH_LONG).show();

@@ -27,6 +27,10 @@ public class Register extends AppCompatActivity {
     final String PassDontMatch = "The Passwords Don't Match";
     final String NoEntries = "Please Fill Form To Register";
 
+    /**
+     * method run when activity is created
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +50,9 @@ public class Register extends AppCompatActivity {
 
     }
 
+    /**
+     * code to insert a new user into the database
+     */
     public void InsertUser() {
         EditText UsernameText = (EditText) findViewById(R.id.RegUsername);
         String Username = UsernameText.getText().toString();
@@ -109,6 +116,11 @@ public class Register extends AppCompatActivity {
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     *  mehtod that confrms that the entered email is valid in format
+     * @param email  - users entered email
+     * @return if its valid
+     */
     public static boolean isEmailValid(String email) {
         boolean isValid = false;
 
@@ -124,6 +136,11 @@ public class Register extends AppCompatActivity {
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * method that confirms if the entered password is valid
+     * @param Pass
+     * @return if the password matches approiate password format
+     */
     public static boolean isPassValid(String Pass) {
         boolean isValid = false;
 
@@ -139,6 +156,12 @@ public class Register extends AppCompatActivity {
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * mehtod that checks if the enetered password matches the password that is stored in the database
+     * @param Password - users entered password in field one
+     * @param PasswordVerif - users enetered password in field to
+     * @return if tthe password in field one matches the same in field 2
+     */
     public boolean PasswordMatch(String Password, String PasswordVerif){
         boolean PassMatch = false;
 
