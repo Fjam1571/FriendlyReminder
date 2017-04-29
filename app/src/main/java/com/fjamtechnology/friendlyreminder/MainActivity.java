@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         EditText UsernameText = (EditText)findViewById(R.id.Username);
         String Username = UsernameText.getText().toString();
+        Username = Username.replace(" ", "");
 
         EditText PasswordText = (EditText)findViewById(R.id.Password);
         String Password = PasswordText.getText().toString();

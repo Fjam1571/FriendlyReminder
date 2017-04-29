@@ -49,6 +49,7 @@ public class Register extends AppCompatActivity {
     public void InsertUser() {
         EditText UsernameText = (EditText) findViewById(R.id.RegUsername);
         String Username = UsernameText.getText().toString();
+        Username = Username.replace(" ", "");
 
         EditText EmailText = (EditText) findViewById(R.id.RegEmail);
         String Email = EmailText.getText().toString();
