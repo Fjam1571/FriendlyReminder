@@ -19,6 +19,10 @@ public class MainActivity extends AppCompatActivity {
     final String NoUserFound = "The User Is Not Registerd Please Create An Account";
     final String PassNotCorrect = "Please Try Entering Password Again";
 
+    /**
+     * code that runs upon a new instance creation of the app
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method for signing a user in
+     */
     public void SignIn (){
 
         String Pass;

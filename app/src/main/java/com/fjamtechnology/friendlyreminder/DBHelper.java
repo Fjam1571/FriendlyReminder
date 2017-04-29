@@ -50,6 +50,10 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * creation method for the database
+     * @param db the database
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(Sql_Create);
@@ -65,16 +69,35 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * runs if the database gets upgraded
+     * @param db  the database
+     * @param oldVersion  the old version
+     * @param newVersion  the new version
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(Sql_Delete);
         onCreate(db);
     }
 
+    /**
+     * runs if the database gets downgraded
+     * @param db  the database
+     * @param oldVersion  the old version
+     * @param newVersion  the new version
+     */
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
     }
 
+    /**
+     *
+     * @param Username  users desired username that they want to register
+     * @param Password  users desired password that they want to register
+     * @param Email     users desired email that they want to register
+     * @return
+     */
     public long RegistrationPage(String Username, String Password, String Email){
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -95,11 +118,22 @@ public class DBHelper extends SQLiteOpenHelper {
 
     //////// Password Encryption BCrypt ///////////////////////////////////////////////////////////////
 
+    /**
+     * password hasing algorithm using the Bcrypt library
+     * @param Password  users password to be hashed
+     * @return hash
+     */
     private String BCrypt(final String Password) {
         String hash = BCrypt.hashpw(Password, BCrypt.gensalt());
         return hash;
     }
 
+    /**
+     * verifys that the entered password matches the hashed password
+     * @param Password users entered password
+     * @param PasswordVerif hash in database
+     * @return
+     */
     public Boolean VerifyPass(final String Password, final String PasswordVerif){
         boolean PassMatch;
 
@@ -112,6 +146,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     ///////// Verify User Exists and Password matches //////////////////////////////////////////////
+
+    /**
+     * Verify User Exists and Password matches
+     * @param Username  he users username
+     * @return  if verified
+     */
     public String Verification(final String Username){
         String Pass = null;
 
@@ -131,6 +171,11 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * methd that gets all LatLng locations for the user
+     * @return cursor holding locations
+     */
     public Cursor getAllLocations(){
 
         SQLiteDatabase db = this.getWritableDatabase();
