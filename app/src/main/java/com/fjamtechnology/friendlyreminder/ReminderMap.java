@@ -256,7 +256,7 @@ public class ReminderMap extends AppCompatActivity
                         if(MarkerName.isEmpty()){
                             AlertDialog.Builder alert2 = new AlertDialog.Builder(ReminderMap.this);
                             alert2.setTitle("Did Not Enter Name For Marker"); //Set Alert dialog title here
-                            alert2.setMessage("Please Make Sure You Have Entered A Name For Your New Marker"); //Message here
+                            alert2.setMessage("Please Make Sure You Have Entered A Name For Your New Marker");
 
                             alert2.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
