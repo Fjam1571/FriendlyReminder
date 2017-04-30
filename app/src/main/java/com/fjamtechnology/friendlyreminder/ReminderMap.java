@@ -101,20 +101,35 @@ public class ReminderMap extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //// Menu Item Long Click Listener /////////////////////////////////////////////////////////
-
-
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-            PopulateMenu();
-        } else {
-            super.onBackPressed();
+
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        Menu m = navView.getMenu();
+
+        int GroupID = m.getItem(1).getGroupId();
+        boolean GroupIDB = false;
+
+        if(GroupID == 2){
+            GroupIDB = true;
         }
+
+        //// Creating Nav View To Check Back Press on Reminders to go back to markers ///
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        if(GroupIDB == true){
+            PopulateMenu();
+        }else{
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+                PopulateMenu();
+            } else {
+                super.onBackPressed();
+            }
+        }
+
     }
 
     @Override
@@ -144,8 +159,8 @@ public class ReminderMap extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         String id = String.valueOf(item.getItemId());
-        NavigationView navView3 = (NavigationView) findViewById(R.id.nav_view);
-        Menu m3 = navView3.getMenu();
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        Menu m = navView.getMenu();
 
         Toast.makeText(getApplicationContext(), id, Toast.LENGTH_LONG).show();
 
@@ -164,7 +179,7 @@ public class ReminderMap extends AppCompatActivity
           //// Checking For Reminders //////////////////////////////////////////////////////////////////
           if (NumbReminders > 0) {
 
-              m3.removeGroup(1);
+              m.removeGroup(1);
 
               c1.moveToFirst();
               for (int i = 0; i < NumbReminders; ) {
@@ -172,7 +187,7 @@ public class ReminderMap extends AppCompatActivity
                   IDColumn = c1.getInt(0);
                   ReminderText = c1.getString(1);
 
-                  m3.add(2, IDColumn, IDColumn, ReminderText);
+                  m.add(2, IDColumn, IDColumn, ReminderText).setIcon(R.drawable.message);
 
                   i++;
                   c1.moveToNext();
@@ -192,8 +207,8 @@ public class ReminderMap extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap map) {
         //// Creating Nav View To Populate Menu ///
-        NavigationView navView1 = (NavigationView) findViewById(R.id.nav_view);
-        Menu m1 = navView1.getMenu();
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        Menu m = navView.getMenu();
 
 
         //Initialize Google Play Services
@@ -319,7 +334,7 @@ public class ReminderMap extends AppCompatActivity
                             builder.include(latLng);
                             mMap.addMarker(new MarkerOptions().position(latLng).title(MarkerName));
                             //// Adding Item To Drawer From New Marker /////
-                            m1.add(1, MarkerID, 1, MarkerName);
+                            m.add(1, MarkerID, 1, MarkerName).setIcon(R.drawable.green_marker);
                             LatLngBounds bounds = builder.build();
                             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
                         }
@@ -366,7 +381,7 @@ public class ReminderMap extends AppCompatActivity
                 MarkerName = c.getString(1);
                 MarkerID = c.getInt(0);
 
-                m.add(1, MarkerID, MarkerID, MarkerName);
+                m.add(1, MarkerID, MarkerID, MarkerName).setIcon(R.drawable.green_marker);
 
                 i++;
                 c.moveToNext();
