@@ -202,7 +202,7 @@ public class ReminderMap extends AppCompatActivity
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
-                mMap.setMyLocationEnabled(true);
+                //mMap.setMyLocationEnabled(true);
             }
         }
         else {
@@ -468,7 +468,7 @@ public class ReminderMap extends AppCompatActivity
                         if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
-                        mMap.setMyLocationEnabled(true);
+                        //mMap.setMyLocationEnabled(true);
                     }
 
                 } else {
