@@ -121,6 +121,7 @@ public class ReminderMap extends AppCompatActivity
 
         if(GroupIDB == true){
             PopulateMenu();
+            ///////
         }else{
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
