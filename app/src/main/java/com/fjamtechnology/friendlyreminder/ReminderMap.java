@@ -78,7 +78,7 @@ public class ReminderMap extends AppCompatActivity
         mapFragment.getMapAsync(this);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-
+        ///
         //// FAB ///////////////////////////////////////////////////////////////////////////////////
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setImageResource(R.drawable.marker);
@@ -111,6 +111,7 @@ public class ReminderMap extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+            PopulateMenu();
         } else {
             super.onBackPressed();
         }
@@ -343,6 +344,7 @@ public class ReminderMap extends AppCompatActivity
     public void PopulateMenu(){
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         Menu m = navView.getMenu();
+        m.clear();
 
         //// Declaring Cursors and DB /////////
         Cursor c ;
