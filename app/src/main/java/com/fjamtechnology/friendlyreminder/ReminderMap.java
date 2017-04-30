@@ -20,6 +20,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -109,12 +110,21 @@ public class ReminderMap extends AppCompatActivity
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         Menu m = navView.getMenu();
 
-        int GroupID = m.getItem(1).getGroupId();
+        int GroupID = -1;
+        try {
+            GroupID = m.getItem(0).getGroupId();
+        }
+        catch (Exception e)
+        {
+
+        }
         boolean GroupIDB = false;
 
         if(GroupID == 2){
             GroupIDB = true;
+            Log.d("TAG", "onBackPressed: ");
         }
+
 
         //// Creating Nav View To Check Back Press on Reminders to go back to markers ///
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
