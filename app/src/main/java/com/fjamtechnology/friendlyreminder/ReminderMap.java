@@ -7,7 +7,6 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,7 +19,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,11 +26,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -48,7 +45,8 @@ public class ReminderMap extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-
+    //// Getting UserID From Main /////////
+    String UserID;
 
     GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
@@ -70,6 +68,8 @@ public class ReminderMap extends AppCompatActivity
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
+
+        UserID = getIntent().getExtras().getString("126516516513246");
 
         PopulateMenu();
 
@@ -106,41 +106,13 @@ public class ReminderMap extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-
-        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
-        Menu m = navView.getMenu();
-
-        int GroupID = -1;
-        try {
-            GroupID = m.getItem(0).getGroupId();
-        }
-        catch (Exception e)
-        {
-
-        }
-        boolean GroupIDB = false;
-
-        if(GroupID == 2){
-            GroupIDB = true;
-            Log.d("TAG", "onBackPressed: ");
-        }
-
-
-        //// Creating Nav View To Check Back Press on Reminders to go back to markers ///
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        if(GroupIDB == true){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
             PopulateMenu();
-            ///////
-        }else{
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
-                PopulateMenu();
-            } else {
-                super.onBackPressed();
-            }
+        } else {
+            super.onBackPressed();
         }
-
     }
 
     @Override
@@ -173,43 +145,42 @@ public class ReminderMap extends AppCompatActivity
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         Menu m = navView.getMenu();
 
-        Toast.makeText(getApplicationContext(), id, Toast.LENGTH_LONG).show();
+        //// DBHELPER Instance ///
+        DBHelper helper = new DBHelper(this);
 
-      if(item.getGroupId() == 1) {
+        if(item.getGroupId() == 2){
+            if(item.getItemId() == 1){
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.closeDrawer(GravityCompat.START);
+                Toast.makeText(getApplicationContext(), "Please Do A Long Click On Map To Add New Marker", Toast.LENGTH_LONG).show();
+            }else if(item.getItemId() == 2){
+                m.removeGroup(2);
+                m.add(3,3,1,"Done");
+                m.setGroupCheckable(1, true, true);
+            }
+        }else if(item.isChecked()){
+            String ID = Integer.toString(item.getItemId());
+            m.removeItem(item.getItemId());
+            helper.RemoveMarker(ID);
+            mMap.clear();
+            onMapReady(mMap);
+        }else if(item.getGroupId() == 3){
+            m.removeGroup(3);
+            m.removeGroup(2);
+            PopulateMenu();
+        }else{
+            String Pos = String.valueOf(item.getItemId());
 
-          //// Declaring Cursors and DB /////////
-          Cursor c1;
-          DBHelper dbHelper1 = new DBHelper(this);
-          c1 = dbHelper1.getAllReminders(id);
+            String Position = helper.GetMarkerPos(Pos);
+            String[] LatLongFromMenID = Position.split(",");
+            double Lat = Double.valueOf(LatLongFromMenID[0]);
+            double Lon = Double.valueOf(LatLongFromMenID[1]);
+            LatLng Cordinates = new LatLng(Lat, Lon);
 
-          //// Variables for Reminders///////
-          int IDColumn;
-          String ReminderText;
-          int NumbReminders = c1.getCount();
-
-          //// Checking For Reminders //////////////////////////////////////////////////////////////////
-          if (NumbReminders > 0) {
-
-              m.removeGroup(1);
-
-              c1.moveToFirst();
-              for (int i = 0; i < NumbReminders; ) {
-                  //// Declaring Temp Variables ////
-                  IDColumn = c1.getInt(0);
-                  ReminderText = c1.getString(1);
-
-                  m.add(2, IDColumn, IDColumn, ReminderText).setIcon(R.drawable.message);
-
-                  i++;
-                  c1.moveToNext();
-
-              }
-              c1.close();
-          } else {
-              c1.close();
-          }
-      }
-      /////////////////////////////////////////////////////
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cordinates, 15));
+        }
 
         return true;
     }
@@ -241,7 +212,7 @@ public class ReminderMap extends AppCompatActivity
         //// Declaring Cursors and DB /////////
         Cursor c ;
         DBHelper dbHelper = new DBHelper(this);
-        c = dbHelper.getAllLocations();
+        c = dbHelper.getAllLocations(UserID);
 
         //// Variables for Markers ///////
         String Name;
@@ -295,9 +266,10 @@ public class ReminderMap extends AppCompatActivity
 
             @Override
             public boolean onMarkerClick(Marker arg0) {
-                String title;
-                title = arg0.getTitle();
-                Toast.makeText(getApplicationContext(), title, Toast.LENGTH_LONG).show();
+                String LatLongSTR = arg0.getPosition().toString();
+                String LatLongSTRSub = LatLongSTR.substring(10, LatLongSTR.length() - 1);
+                String MarkerID = Integer.toString(dbHelper.ReturnMarkerID(LatLongSTRSub));
+                Toast.makeText(getApplicationContext(), MarkerID, Toast.LENGTH_SHORT).show();
                 return true;
             }
 
@@ -341,13 +313,14 @@ public class ReminderMap extends AppCompatActivity
                         }else {
                             //// Creating Marker ID And Getting The ID From Database ///
                             int MarkerID;
-                            MarkerID = dbHelper.InsertNewMarker(MarkerName, LatLongSTRSub);
+                            MarkerID = dbHelper.InsertNewMarker(MarkerName, LatLongSTRSub, UserID);
                             builder.include(latLng);
                             mMap.addMarker(new MarkerOptions().position(latLng).title(MarkerName));
                             //// Adding Item To Drawer From New Marker /////
-                            m.add(1, MarkerID, 1, MarkerName).setIcon(R.drawable.green_marker);
+                            int MarkerOrder = MarkerID + 3;
+                            m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
                             LatLngBounds bounds = builder.build();
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 450));
                         }
                     }
                 });
@@ -375,11 +348,11 @@ public class ReminderMap extends AppCompatActivity
         //// Declaring Cursors and DB /////////
         Cursor c ;
         DBHelper dbHelper = new DBHelper(this);
-        c = dbHelper.getAllLocations();
+        c = dbHelper.getAllLocations(UserID);
 
         //// Variables for Markers ///////
         String MarkerName;
-        int MarkerID;
+        int MarkerID, MarkerOrder;
         int NumbMarkers = c.getCount();
 
         //// Checking For Markers //////////////////////////////////////////////////////////////////
@@ -391,19 +364,23 @@ public class ReminderMap extends AppCompatActivity
                 //// Declaring Temp Variables ////
                 MarkerName = c.getString(1);
                 MarkerID = c.getInt(0);
+                MarkerOrder = MarkerID + 2;
 
-                m.add(1, MarkerID, MarkerID, MarkerName).setIcon(R.drawable.green_marker);
+                m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
 
                 i++;
                 c.moveToNext();
 
             }
-
             c.close();
+            m.add(2,1,1,"Add Marker");
+            m.add(2,2,2,"Delete Marker");
         }else{
             c.close();
+            m.clear();
+            m.add(2,1,1,"Add Marker");
+            m.add(2,2,2,"Delete Marker");
         }
-
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 

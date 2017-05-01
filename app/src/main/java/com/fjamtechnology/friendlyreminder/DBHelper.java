@@ -33,7 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "CREATE TABLE `Markers` ( " +
             " `MarkersID` INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " +
             " `idUser` INTEGER, " +
-            " `MarkerName` TEXT UNIQUE, " +
+            " `MarkerName` TEXT, " +
             " `LongLat` TEXT UNIQUE, " +
             " FOREIGN KEY(`idUser`) REFERENCES `User` " +
             "); ";
@@ -79,6 +79,18 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(Sql_Delete);
         onCreate(db);
+    }
+
+    public String GetUserID(String Username){
+        String UserID;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.query(UserTbl, new String[] {UserIDCol}, UsernameCol + " = ?", new String[]{Username}, null, null, null);
+        cursor.moveToFirst();
+
+        UserID = cursor.getString(0);
+
+        return UserID;
     }
 
     /**
@@ -164,9 +176,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if(cursor.getCount() <= 0){
             cursor.close();
+
             return Pass;
         }else{
             Pass = cursor.getString(0);
+
             return Pass;
         }
     }
@@ -176,23 +190,21 @@ public class DBHelper extends SQLiteOpenHelper {
      * methd that gets all LatLng locations for the user
      * @return cursor holding locations
      */
-    public Cursor getAllLocations(){
+    public Cursor getAllLocations(String UserID){
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.query(MarkersTbl, new String[] {MarkerID, MarkerNameCol, LongLatCol}, UserIDCol + " = ?", new String[]{"1"}, null, null, null);
+        Cursor cursor = db.query(MarkersTbl, new String[] {MarkerID, MarkerNameCol, LongLatCol}, UserIDCol + " = ?", new String[]{UserID}, null, null, null);
 
         return cursor;
     }
 
-    public int InsertNewMarker(String MarkerName, String MarkerLatLong){
+    public int InsertNewMarker(String MarkerName, String MarkerLatLong, String UserID){
         SQLiteDatabase db = this.getWritableDatabase();
-
-        int idUser = 1;
 
         ContentValues values = new ContentValues();
 
-        values.put("idUser", idUser);
+        values.put("idUser", UserID);
         values.put("MarkerName", MarkerName);
         values.put("LongLat", MarkerLatLong);
 
@@ -210,6 +222,34 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query(RemindersTbl, new String[] {ReminderIDCol, ReminderTextCol}, MarkerID + " = ?", new String[]{ID}, null, null, null);
 
         return cursor;
+    }
+
+    public int ReturnMarkerID(String LatLong){
+        int i;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.query(MarkersTbl, new String[] {MarkerID}, LongLatCol + " = ?", new String[]{LatLong}, null, null, null);
+        cursor.moveToFirst();
+
+        i = cursor.getInt(0);
+
+        return i;
+    }
+
+    public void RemoveMarker(String ID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(MarkersTbl, MarkerID + " = ?", new String[] {ID});
+    }
+
+    public String GetMarkerPos (String ID){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.query(MarkersTbl, new String[] {LongLatCol}, MarkerID + " = ?", new String[]{ID}, null, null, null);
+        cursor.moveToFirst();
+
+        String Position = cursor.getString(0);
+
+        return  Position;
     }
 
 }

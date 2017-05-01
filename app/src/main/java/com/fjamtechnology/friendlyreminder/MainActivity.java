@@ -87,7 +87,15 @@ public class MainActivity extends AppCompatActivity {
             if(Pass == null){
                 Toast.makeText(getApplicationContext(), NoUserFound, Toast.LENGTH_LONG).show();
             }else if(SamePass == true){
-                startActivity(new Intent(MainActivity.this, ReminderMap.class));
+
+                String UserID = helper.GetUserID(Username);
+
+                Toast.makeText(getApplicationContext(), UserID, Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(MainActivity.this, ReminderMap.class);
+                intent.putExtra("126516516513246", UserID);
+                startActivity(intent);
+
                 PasswordText.setText("");
             }else if(SamePass == false){
                 Toast.makeText(getApplicationContext(), PassNotCorrect, Toast.LENGTH_LONG).show();
