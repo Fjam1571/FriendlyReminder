@@ -180,7 +180,7 @@ public class ReminderMap extends AppCompatActivity
                     "No",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
+                            dialog.cancel();//
                         }
                     });
             AlertDialog AlertDeleteMarker = builder.create();
