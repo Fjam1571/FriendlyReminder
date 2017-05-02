@@ -314,6 +314,11 @@ public class ReminderMap extends AppCompatActivity
 
             @Override
             public boolean onMarkerClick(Marker arg0) {
+                if(arg0.getTitle().equals("Current Position"))
+                {
+                    return false;
+                }
+
                 String LatLongSTR = arg0.getPosition().toString();
                 String LatLongSTRSub = LatLongSTR.substring(10, LatLongSTR.length() - 1);
                 String MarkerID = Integer.toString(dbHelper.ReturnMarkerID(LatLongSTRSub));
@@ -519,7 +524,7 @@ public class ReminderMap extends AppCompatActivity
                         if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
-                        //mMap.setMyLocationEnabled(true);
+                        mMap.setMyLocationEnabled(true);
                     }
 
                 } else {
