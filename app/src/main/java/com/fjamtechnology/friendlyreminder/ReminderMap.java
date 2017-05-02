@@ -333,36 +333,42 @@ public class ReminderMap extends AppCompatActivity
             @Override
             public void onInfoWindowClick(Marker marker) {
 
-                DBHelper DbHelper = new DBHelper(getApplicationContext());
-
-                //// Get Reminders From Marker ////
-                String Pos = String.valueOf(marker.getPosition());
-                Pos = Pos.substring(10, Pos.length()-1);
-                int ID = DbHelper.ReturnMarkerID(Pos);
-                String IDSTR = String.valueOf(ID);
-
-                //Toast.makeText(getApplicationContext(), Pos, Toast.LENGTH_LONG).show();
-
-                String Reminders = "";
-                Cursor cursor = DbHelper.getAllReminders(IDSTR);
-                int NumbReminders = cursor.getCount();
-
-                if(NumbReminders > 0){
-                    cursor.moveToFirst();
-                    for(int i = 0; i < NumbReminders;){
-                        //// Declaring Temp Variables ////
-                        Reminders += "\n\t\t\t\t\t\t" + cursor.getString(1);
-                        i++;
-                        cursor.moveToNext();
-
-                    }
+                if(marker.getTitle().equals("Current Position"))
+                {
 
                 }else{
-                    Reminders = "\n\t\t\t\t\t\t" + "No Reminders Yet";
+                    DBHelper DbHelper = new DBHelper(getApplicationContext());
+
+                    //// Get Reminders From Marker ////
+                    String Pos = String.valueOf(marker.getPosition());
+                    Pos = Pos.substring(10, Pos.length()-1);
+                    int ID = DbHelper.ReturnMarkerID(Pos);
+                    String IDSTR = String.valueOf(ID);
+
+                    //Toast.makeText(getApplicationContext(), Pos, Toast.LENGTH_LONG).show();
+
+                    String Reminders = "";
+                    Cursor cursor = DbHelper.getAllReminders(IDSTR);
+                    int NumbReminders = cursor.getCount();
+
+                    if(NumbReminders > 0){
+                        cursor.moveToFirst();
+                        for(int i = 0; i < NumbReminders;){
+                            //// Declaring Temp Variables ////
+                            Reminders += "\n\t\t\t\t\t\t" + cursor.getString(1);
+                            i++;
+                            cursor.moveToNext();
+
+                        }
+
+                    }else{
+                        Reminders = "\n\t\t\t\t\t\t" + "No Reminders Yet";
+                    }
+
+                    //// Showing Reminders ////
+                    DialogReminders(Reminders);
                 }
 
-                //// Showing Reminders ////
-                DialogReminders(Reminders);
             }
         });
 
