@@ -19,10 +19,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -180,7 +182,7 @@ public class ReminderMap extends AppCompatActivity
                     "No",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();//
+                            dialog.cancel();
                         }
                     });
             AlertDialog AlertDeleteMarker = builder.create();
@@ -308,24 +310,60 @@ public class ReminderMap extends AppCompatActivity
         }
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        //// Click Listener ////
+        //// Marker Click Listener ////
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
         {
 
             @Override
-            public boolean onMarkerClick(Marker arg0) {
-                if(arg0.getTitle().equals("Current Position"))
+            public boolean onMarkerClick(Marker marker) {
+                if(marker.getTitle().equals("Current Position"))
                 {
                     return false;
                 }
 
-                String LatLongSTR = arg0.getPosition().toString();
-                String LatLongSTRSub = LatLongSTR.substring(10, LatLongSTR.length() - 1);
-                String MarkerID = Integer.toString(dbHelper.ReturnMarkerID(LatLongSTRSub));
-                Toast.makeText(getApplicationContext(), MarkerID, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), String.valueOf(marker.getId()), Toast.LENGTH_SHORT).show();
+                marker.showInfoWindow();
                 return true;
             }
 
+        });
+
+        //// Info Window Click Listener ////
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+
+                DBHelper DbHelper = new DBHelper(getApplicationContext());
+
+                //// Get Reminders From Marker ////
+                String Pos = String.valueOf(marker.getPosition());
+                Pos = Pos.substring(10, Pos.length()-1);
+                int ID = DbHelper.ReturnMarkerID(Pos);
+                String IDSTR = String.valueOf(ID);
+
+                //Toast.makeText(getApplicationContext(), Pos, Toast.LENGTH_LONG).show();
+
+                String Reminders = "";
+                Cursor cursor = DbHelper.getAllReminders(IDSTR);
+                int NumbReminders = cursor.getCount();
+
+                if(NumbReminders > 0){
+                    cursor.moveToFirst();
+                    for(int i = 0; i < NumbReminders;){
+                        //// Declaring Temp Variables ////
+                        Reminders += "\n\t\t\t\t\t\t" + cursor.getString(1);
+                        i++;
+                        cursor.moveToNext();
+
+                    }
+
+                }else{
+                    Reminders = "No Reminders Yet";
+                }
+
+                //// Showing Reminders ////
+                DialogReminders(Reminders);
+            }
         });
 
         //// Long Click Add Marker /////////////////////////////////////////////////////////////////
@@ -563,6 +601,24 @@ public class ReminderMap extends AppCompatActivity
     @Override
     public void onConnectionSuspended(int i) {
 
+    }
+
+    public void DialogReminders(String Reminders){
+        LayoutInflater inflater= LayoutInflater.from(this);
+        View view=inflater.inflate(R.layout.scrollable_reminders_infowindow, null);
+
+        TextView textview=(TextView)view.findViewById(R.id.Reminders);
+        textview.setText(Reminders);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Reminders");
+        alertDialog.setView(view);
+        alertDialog.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.show();
     }
 
 

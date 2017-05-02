@@ -66,7 +66,6 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put("Reminder", "Take Trash OUT");
 
         db.insert("Reminders", null, values);
-
     }
 
     /**
@@ -219,7 +218,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.query(RemindersTbl, new String[] {ReminderIDCol, ReminderTextCol}, MarkerID + " = ?", new String[]{ID}, null, null, null);
+        Cursor cursor = db.query(RemindersTbl, new String[] {ReminderIDCol, ReminderTextCol}, MarkersIDCol+ " = ?", new String[]{ID}, null, null, null);
 
         return cursor;
     }
