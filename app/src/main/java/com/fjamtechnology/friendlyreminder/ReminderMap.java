@@ -358,7 +358,7 @@ public class ReminderMap extends AppCompatActivity
                     }
 
                 }else{
-                    Reminders = "No Reminders Yet";
+                    Reminders = "\n\t\t\t\t\t\t" + "No Reminders Yet";
                 }
 
                 //// Showing Reminders ////
