@@ -157,29 +157,77 @@ public class ReminderMap extends AppCompatActivity
                 m.removeGroup(2);
                 m.add(3,3,1,"Done");
                 m.setGroupCheckable(1, true, true);
+                Toast.makeText(getApplicationContext(), "Double Click Marker To Delete", Toast.LENGTH_LONG).show();
             }
         }else if(item.isChecked()){
-            String ID = Integer.toString(item.getItemId());
-            m.removeItem(item.getItemId());
-            helper.RemoveMarker(ID);
-            mMap.clear();
-            onMapReady(mMap);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Are You Sure You Want To Delete Marker? It Will Be Permanently Deleted");
+            builder.setPositiveButton(
+                    "Yes",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            String ID = Integer.toString(item.getItemId());
+                            m.removeItem(item.getItemId());
+                            helper.RemoveMarker(ID);
+                            mMap.clear();
+                            onMapReady(mMap);
+                            dialog.cancel();
+                        }
+                    });
+
+            builder.setNegativeButton(
+                    "No",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog AlertDeleteMarker = builder.create();
+            AlertDeleteMarker.show();
+
+
         }else if(item.getGroupId() == 3){
             m.removeGroup(3);
             m.removeGroup(2);
             PopulateMenu();
-        }else{
-            String Pos = String.valueOf(item.getItemId());
+        }else if(m.getItem(0).getGroupId() == 2){
 
-            String Position = helper.GetMarkerPos(Pos);
-            String[] LatLongFromMenID = Position.split(",");
-            double Lat = Double.valueOf(LatLongFromMenID[0]);
-            double Lon = Double.valueOf(LatLongFromMenID[1]);
-            LatLng Cordinates = new LatLng(Lat, Lon);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Go To:");
+            builder.setItems(new CharSequence[]
+                            {"Marker", "Reminders"},
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // The 'which' argument contains the index position
+                            // of the selected item
+                            switch (which) {
+                                case 0:
+                                    String Pos = String.valueOf(item.getItemId());
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cordinates, 15));
+                                    String Position = helper.GetMarkerPos(Pos);
+                                    String[] LatLongFromMenID = Position.split(",");
+                                    double Lat = Double.valueOf(LatLongFromMenID[0]);
+                                    double Lon = Double.valueOf(LatLongFromMenID[1]);
+                                    LatLng Cordinates = new LatLng(Lat, Lon);
+
+                                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                                    drawer.closeDrawer(GravityCompat.START);
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cordinates, 15));
+                                    break;
+                                case 1:
+                                    Toast.makeText(getApplicationContext(), "Go To Reminders", Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        }
+                    });
+            builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.create().show();
+
         }
 
         return true;
@@ -252,7 +300,7 @@ public class ReminderMap extends AppCompatActivity
 
             //// Moving Camera To Maker Bounds ////
             LatLngBounds bounds = builder.build();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 500));
 
             c.close();
         }else{
