@@ -2,6 +2,7 @@ package com.fjamtechnology.friendlyreminder;
 
 import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
@@ -73,8 +74,6 @@ public class ReminderMap extends AppCompatActivity
 
         //// Getting User ID From Login And Populating Menu Drawer Based On User
         UserID = getIntent().getExtras().getString("126516516513246");
-
-        PopulateMenu();
 
         ///// Map //////////////////////////////////////////////////////////////////////////////////
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -217,10 +216,13 @@ public class ReminderMap extends AppCompatActivity
 
                                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                                     drawer.closeDrawer(GravityCompat.START);
-                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cordinates, 18));
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cordinates, 19));
                                     break;
                                 case 1:
-                                    Toast.makeText(getApplicationContext(), "Go To Reminders", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(ReminderMap.this, Reminders.class);
+                                    intent.putExtra("126516516513246", UserID);
+                                    intent.putExtra("165165165165166", String.valueOf(item.getItemId()));
+                                    startActivity(intent);
                                     break;
                             }
                         }
@@ -240,6 +242,7 @@ public class ReminderMap extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap map) {
+        PopulateMenu();
 
         LatLngBounds.Builder builderMapReset = new LatLngBounds.Builder();
 
@@ -323,7 +326,7 @@ public class ReminderMap extends AppCompatActivity
 
                 //// Moving Camera To Maker Bounds ////
                 LatLngBounds bounds = builderMapReset.build();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 500));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 350));
 
                 c.close();
             }
@@ -396,15 +399,12 @@ public class ReminderMap extends AppCompatActivity
             }
         });
 
-        //// Long Click Add Marker /////////////////////////////////////////////////////////////////
-
-        //// Lat Long Builder ///
-
-        LatLngBounds.Builder builderNewMarker = new LatLngBounds.Builder();
-
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+
+                LatLngBounds.Builder builderNewMarker = new LatLngBounds.Builder();
+
                 AlertDialog.Builder alert = new AlertDialog.Builder(ReminderMap.this);
                 alert.setTitle("New Marker Creator"); //Set Alert dialog title here
                 alert.setMessage("Please Enter A Name For Your New Marker"); //Message here
@@ -453,6 +453,7 @@ public class ReminderMap extends AppCompatActivity
                                 mMap.addMarker(new MarkerOptions().position(latLng).title(MarkerName));
                                 //// Adding Item To Drawer From New Marker /////
                                 int MarkerOrder = MarkerID + 3;
+                                builderNewMarker.include(latLng);
                                 m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                             }else{
@@ -464,7 +465,7 @@ public class ReminderMap extends AppCompatActivity
                                 int MarkerOrder = MarkerID + 3;
                                 m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
                                 LatLngBounds bounds = builderNewMarker.build();
-                                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
                             }
 
                         }
@@ -688,8 +689,10 @@ public class ReminderMap extends AppCompatActivity
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Go To Reminders", Toast.LENGTH_LONG).show();
-
+                Intent intent = new Intent(ReminderMap.this, Reminders.class);
+                intent.putExtra("126516516513246", UserID);
+                intent.putExtra("165165165165166", MarkerID);
+                startActivity(intent);
                 alert.cancel();
             }
         });
@@ -722,7 +725,7 @@ public class ReminderMap extends AppCompatActivity
                             AlertDialog.Builder EmptyInput = new AlertDialog.Builder(getApplicationContext());
                             EmptyInput.setTitle("Input Empty"); //Set Alert dialog title here
                             EmptyInput.setMessage("Please Make Sure You Have Entered A Reminder For Your Marker"
-                            + " Or Press Cancel If You Did Not Want To Add A New Reminder");
+                                    + " Or Press Cancel If You Did Not Want To Add A New Reminder");
 
                             EmptyInput.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
@@ -839,7 +842,7 @@ public class ReminderMap extends AppCompatActivity
 
                 //// Moving Camera To Maker Bounds ////
                 LatLngBounds bounds = FabBuilder.build();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
 
                 c.close();
             }

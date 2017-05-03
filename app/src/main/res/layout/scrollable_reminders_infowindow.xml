@@ -24,7 +24,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="368dp"
+        android:layout_height="match_parent"
         android:layout_weight="0.41"
         android:id="@+id/scrollView2"
         android:layout_above="@+id/Edit"
@@ -32,8 +32,8 @@
 
         <TextView
             android:id="@+id/Reminders"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </ScrollView>
 

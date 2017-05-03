@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,7 +67,11 @@ public class MainActivity extends AppCompatActivity {
         EmptyUsername = Username.isEmpty();
         EmptyPassword = Password.isEmpty();
 
-        if(EmptyUsername == true && EmptyPassword == true){
+        Intent intent = new Intent(MainActivity.this, ReminderMap.class);
+        intent.putExtra("126516516513246", "1");
+        startActivity(intent);
+
+        /*if(EmptyUsername == true && EmptyPassword == true){
             Toast.makeText(getApplicationContext(), EmptyUsernamePassword, Toast.LENGTH_LONG).show();
         }else if(EmptyUsername == true){
             Toast.makeText(getApplicationContext(), EmptyUsernameSTR, Toast.LENGTH_LONG).show();
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 PasswordText.setText("");
             }
 
-        }
+        }*/
     }
 
 
