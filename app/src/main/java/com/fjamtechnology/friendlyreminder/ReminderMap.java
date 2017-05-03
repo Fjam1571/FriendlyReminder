@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +59,6 @@ public class ReminderMap extends AppCompatActivity
     private GoogleMap mMap;
     private LatLng mClickPos;
     String test = "test";
-    LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +71,7 @@ public class ReminderMap extends AppCompatActivity
             checkLocationPermission();
         }
 
+        //// Getting User ID From Login And Populating Menu Drawer Based On User
         UserID = getIntent().getExtras().getString("126516516513246");
 
         PopulateMenu();
@@ -89,8 +90,9 @@ public class ReminderMap extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LatLngBounds bounds = builder.build();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
+
+                FabAnimateCamer();
+
             }
         });
         ////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +173,7 @@ public class ReminderMap extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int id) {
                             String ID = Integer.toString(item.getItemId());
                             m.removeItem(item.getItemId());
-                            helper.RemoveMarker(ID);
+                            helper.RemoverMarkerAndReminders(ID);
                             mMap.clear();
                             onMapReady(mMap);
                             dialog.cancel();
@@ -215,7 +217,7 @@ public class ReminderMap extends AppCompatActivity
 
                                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                                     drawer.closeDrawer(GravityCompat.START);
-                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cordinates, 15));
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Cordinates, 18));
                                     break;
                                 case 1:
                                     Toast.makeText(getApplicationContext(), "Go To Reminders", Toast.LENGTH_SHORT).show();
@@ -238,6 +240,9 @@ public class ReminderMap extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap map) {
+
+        LatLngBounds.Builder builderMapReset = new LatLngBounds.Builder();
+
         //// Creating Nav View To Populate Menu ///
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         Menu m = navView.getMenu();
@@ -268,7 +273,6 @@ public class ReminderMap extends AppCompatActivity
         String Name;
         String[] LatLong;
         double lat, lon;
-        String MarkerName;
         int NumbMarkers = c.getCount();
 
         mMap = map;
@@ -277,34 +281,53 @@ public class ReminderMap extends AppCompatActivity
         //// Checking For Markers //////////////////////////////////////////////////////////////////
         if(NumbMarkers > 0){
             ////Zoom On Markers ///////////
-
             c.moveToFirst();
-            for(int i = 0; i < NumbMarkers;){
-                //// Declaring Temp Variables ////
-                Name = c.getString(1);
-                MarkerName = Name;
+            if(NumbMarkers == 1){
+                for(int i = 0; i < NumbMarkers;){
+                    Name = c.getString(1);
+                    //// Getting Variables From DB ////
+                    LatLong = c.getString(2).split(",");
+                    lat = Double.parseDouble(LatLong[0]);
+                    lon = Double.parseDouble(LatLong[1]);
+                    LatLng LatLngMarker = new LatLng(lat, lon);
 
-                //// Getting Variables From DB ////
-                LatLong = c.getString(2).split(",");
-                lat = Double.parseDouble(LatLong[0]);
-                lon = Double.parseDouble(LatLong[1]);
-                LatLng LatLngMarker = new LatLng(lat, lon);
+                    mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name)).showInfoWindow();
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLngMarker, 18));
 
-                //// Adding Bounds To Builder ////
-                builder.include(LatLngMarker);
+                    //// Adding Bounds To Builder ////
+                    i++;
+                    c.moveToNext();
 
-                mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name)).showInfoWindow();
+                }
+                c.close();
+            }else{
+                for(int i = 0; i < NumbMarkers;){
+                    //// Declaring Temp Variables ////
+                    Name = c.getString(1);
 
-                i++;
-                c.moveToNext();
+                    //// Getting Variables From DB ////
+                    LatLong = c.getString(2).split(",");
+                    lat = Double.parseDouble(LatLong[0]);
+                    lon = Double.parseDouble(LatLong[1]);
+                    LatLng LatLngMarker = new LatLng(lat, lon);
 
+                    //// Adding Bounds To Builder ////
+                    builderMapReset.include(LatLngMarker);
+
+                    mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name)).showInfoWindow();
+
+                    i++;
+                    c.moveToNext();
+
+                }
+
+                //// Moving Camera To Maker Bounds ////
+                LatLngBounds bounds = builderMapReset.build();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 500));
+
+                c.close();
             }
 
-            //// Moving Camera To Maker Bounds ////
-            LatLngBounds bounds = builder.build();
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 500));
-
-            c.close();
         }else{
             c.close();
         }
@@ -319,11 +342,11 @@ public class ReminderMap extends AppCompatActivity
                 if(marker.getTitle().equals("Current Position"))
                 {
                     return false;
+                }else{
+                    marker.showInfoWindow();
+                    return true;
                 }
 
-                Toast.makeText(getApplicationContext(), String.valueOf(marker.getId()), Toast.LENGTH_SHORT).show();
-                marker.showInfoWindow();
-                return true;
             }
 
         });
@@ -347,9 +370,9 @@ public class ReminderMap extends AppCompatActivity
 
                     //Toast.makeText(getApplicationContext(), Pos, Toast.LENGTH_LONG).show();
 
-                    String Reminders = "";
                     Cursor cursor = DbHelper.getAllReminders(IDSTR);
                     int NumbReminders = cursor.getCount();
+                    String Reminders = "";
 
                     if(NumbReminders > 0){
                         cursor.moveToFirst();
@@ -366,14 +389,19 @@ public class ReminderMap extends AppCompatActivity
                     }
 
                     //// Showing Reminders ////
-                    DialogReminders(Reminders);
+                    DialogReminders(Reminders, IDSTR);
+
                 }
 
             }
         });
 
         //// Long Click Add Marker /////////////////////////////////////////////////////////////////
-        ////
+
+        //// Lat Long Builder ///
+
+        LatLngBounds.Builder builderNewMarker = new LatLngBounds.Builder();
+
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -409,15 +437,36 @@ public class ReminderMap extends AppCompatActivity
 
                         }else {
                             //// Creating Marker ID And Getting The ID From Database ///
-                            int MarkerID;
-                            MarkerID = dbHelper.InsertNewMarker(MarkerName, LatLongSTRSub, UserID);
-                            builder.include(latLng);
-                            mMap.addMarker(new MarkerOptions().position(latLng).title(MarkerName));
-                            //// Adding Item To Drawer From New Marker /////
-                            int MarkerOrder = MarkerID + 3;
-                            m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
-                            LatLngBounds bounds = builder.build();
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 450));
+                            //// Declaring Cursors and DB /////////
+                            Cursor c ;
+                            DBHelper db = new DBHelper(getApplicationContext());
+                            c = db.getAllLocations(UserID);
+
+                            //// Variables for Markers ///////
+                            String[] LatLong;
+                            double lat, lon;
+                            int NumbMarkers = c.getCount();
+
+                            if(NumbMarkers == 0){
+                                int MarkerID;
+                                MarkerID = dbHelper.InsertNewMarker(MarkerName, LatLongSTRSub, UserID);
+                                mMap.addMarker(new MarkerOptions().position(latLng).title(MarkerName));
+                                //// Adding Item To Drawer From New Marker /////
+                                int MarkerOrder = MarkerID + 3;
+                                m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
+                            }else{
+                                int MarkerID;
+                                MarkerID = dbHelper.InsertNewMarker(MarkerName, LatLongSTRSub, UserID);
+                                builderNewMarker.include(latLng);
+                                mMap.addMarker(new MarkerOptions().position(latLng).title(MarkerName));
+                                //// Adding Item To Drawer From New Marker /////
+                                int MarkerOrder = MarkerID + 3;
+                                m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
+                                LatLngBounds bounds = builderNewMarker.build();
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+                            }
+
                         }
                     }
                 });
@@ -609,7 +658,9 @@ public class ReminderMap extends AppCompatActivity
 
     }
 
-    public void DialogReminders(String Reminders){
+    public void DialogReminders(String Reminders, String MarkerID){
+
+        //// Creating Dialog And View To Show All Reminders If Any In Window ////
         LayoutInflater inflater= LayoutInflater.from(this);
         View view=inflater.inflate(R.layout.scrollable_reminders_infowindow, null);
 
@@ -625,6 +676,177 @@ public class ReminderMap extends AppCompatActivity
         });
         AlertDialog alert = alertDialog.create();
         alert.show();
+        //////////////////////////////////////////////////////////////////////////
+
+        ////////////////////////////////////////////////////////////////
+        /**/DBHelper Helper = new DBHelper(getApplicationContext());/**/
+        ////////////////////////////////////////////////////////////////
+
+        //// Going To Reminder ListView Activity ////
+        Button GoToReminders = (Button) alert.findViewById(R.id.Edit);
+        GoToReminders.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Go To Reminders", Toast.LENGTH_LONG).show();
+
+                alert.cancel();
+            }
+        });
+        ////////////////////////////////////////////////
+
+        //// Adding New Reminder From Dialog Box ////
+        Button AddNewReminder = (Button) alert.findViewById(R.id.AddNewReminder);
+        AddNewReminder.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder alertEnterReminder = new AlertDialog.Builder(ReminderMap.this);
+                alertEnterReminder.setTitle("New Reminder"); //Set Alert dialog title here
+                alertEnterReminder.setMessage("Please Enter A New Reminder"); //Message here
+
+                // Set an EditText view to get user input
+                final EditText input = new EditText(ReminderMap.this);
+                alertEnterReminder.setView(input);
+                alertEnterReminder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertEnterReminder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String ReminderText = input.getEditableText().toString();
+
+                        if(ReminderText.isEmpty()){
+                            AlertDialog.Builder EmptyInput = new AlertDialog.Builder(getApplicationContext());
+                            EmptyInput.setTitle("Input Empty"); //Set Alert dialog title here
+                            EmptyInput.setMessage("Please Make Sure You Have Entered A Reminder For Your Marker"
+                            + " Or Press Cancel If You Did Not Want To Add A New Reminder");
+
+                            EmptyInput.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                            EmptyInput.show();
+                        }else{
+                            Helper.AddNewReminder(MarkerID,ReminderText);
+                            dialog.cancel();
+                            alert.cancel();
+                            if(Reminders.toString() == "\n\t\t\t\t\t\t" + "No Reminders Yet" ){
+                                String RemindersUpdated = "\n\t\t\t\t\t\t" + ReminderText;
+                                DialogReminders(RemindersUpdated, MarkerID);
+                            }else {
+                                String RemindersUpdated = Reminders + "\n\t\t\t\t\t\t" + ReminderText;
+                                DialogReminders(RemindersUpdated, MarkerID);
+                            }
+                        }
+                    }
+                });
+
+                alertEnterReminder.show();
+
+            }
+        });
+        ////////////////////////////////////////////////////////////////
+
+        //// Going To Reminder ListView Activity ////
+        Button DeleteMarker = (Button) alert.findViewById(R.id.DeleteMarker);
+        DeleteMarker.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder alertDeleteMarker = new AlertDialog.Builder(ReminderMap.this);
+                alertDeleteMarker.setTitle("!!Warning!!"); //Set Alert dialog title here
+                alertDeleteMarker.setMessage("Are You Sure You Want To Delete Marker And Its Reminders? This Is Permanent."); //Message here
+                alertDeleteMarker.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDeleteMarker.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Helper.RemoverMarkerAndReminders(MarkerID);
+                        dialog.cancel();
+                        alert.cancel();
+                        mMap.clear();
+                        onMapReady(mMap);
+                    }
+                });
+                alertDeleteMarker.show();
+            }
+        });
+        ////////////////////////////////////////////////
+
+    }
+
+    public void FabAnimateCamer(){
+
+        LatLngBounds.Builder FabBuilder = new LatLngBounds.Builder();
+
+        //// Declaring Cursors and DB /////////
+        Cursor c ;
+        DBHelper db = new DBHelper(this);
+        c = db.getAllLocations(UserID);
+
+        //// Variables for Markers ///////
+        String[] LatLong;
+        double lat, lon;
+        int NumbMarkers = c.getCount();
+
+        Toast.makeText(getApplicationContext(),String.valueOf(NumbMarkers),Toast.LENGTH_LONG).show();
+
+        //// Checking For Markers //////////////////////////////////////////////////////////////////
+        if(NumbMarkers > 0){
+            ////Zoom On Markers ///////////
+            c.moveToFirst();
+            if(NumbMarkers == 1){
+                for(int i = 0; i < NumbMarkers;){
+                    //// Getting Variables From DB ////
+                    LatLong = c.getString(2).split(",");
+                    lat = Double.parseDouble(LatLong[0]);
+                    lon = Double.parseDouble(LatLong[1]);
+                    LatLng LatLngMarker = new LatLng(lat, lon);
+
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLngMarker, 18));
+
+                    //// Adding Bounds To Builder ////
+                    i++;
+                    c.moveToNext();
+
+                }
+                c.close();
+            }else{
+                for(int i = 0; i < NumbMarkers;){
+                    //// Getting Variables From DB ////
+                    LatLong = c.getString(2).split(",");
+                    lat = Double.parseDouble(LatLong[0]);
+                    lon = Double.parseDouble(LatLong[1]);
+                    LatLng LatLngMarker = new LatLng(lat, lon);
+
+                    //// Adding Bounds To Builder ////
+                    FabBuilder.include(LatLngMarker);
+                    i++;
+                    c.moveToNext();
+
+                }
+
+                //// Moving Camera To Maker Bounds ////
+                LatLngBounds bounds = FabBuilder.build();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150));
+
+                c.close();
+            }
+
+        }else{
+            Toast.makeText(getApplicationContext(),"No Markers To Focus On", Toast.LENGTH_LONG).show();
+        }
     }
 
 

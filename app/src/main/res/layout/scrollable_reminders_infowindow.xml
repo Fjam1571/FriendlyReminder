@@ -1,17 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+    <Button
+        android:id="@+id/Edit"
+        android:layout_width="129dp"
+        android:layout_height="wrap_content"
+        android:text="Edit Reminders"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/AddNewReminder"
+        android:layout_width="129dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/Edit"
+        android:layout_toRightOf="@+id/Edit"
+        android:text="Add New Reminder" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="368dp"
+        android:layout_weight="0.41"
+        android:id="@+id/scrollView2"
+        android:layout_above="@+id/Edit"
+        android:layout_alignParentTop="true">
 
         <TextView
             android:id="@+id/Reminders"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
 
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/DeleteMarker"
+        android:layout_width="129dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/AddNewReminder"
+        android:layout_toRightOf="@+id/AddNewReminder"
+        android:text="Delete Marker" />
+
+
+</RelativeLayout>
+
+
+

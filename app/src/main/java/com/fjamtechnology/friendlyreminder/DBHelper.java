@@ -59,13 +59,6 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(Sql_Create);
         db.execSQL(Sql_Create2);
         db.execSQL(Sql_Create3);
-
-        ContentValues values = new ContentValues();
-
-        values.put("MarkersID", "1");
-        values.put("Reminder", "Take Trash OUT");
-
-        db.insert("Reminders", null, values);
     }
 
     /**
@@ -198,6 +191,17 @@ public class DBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor getAllReminders(String ID){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.query(RemindersTbl, new String[] {ReminderIDCol, ReminderTextCol}, MarkersIDCol+ " = ?", new String[]{ID}, null, null, null);
+
+        return cursor;
+    }
+
+
+    //// Marker DB Options///////////////////////////////////////////////////////////////////////////
     public int InsertNewMarker(String MarkerName, String MarkerLatLong, String UserID){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -214,13 +218,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public Cursor getAllReminders(String ID){
+    public void DeleteAllMarkerReminders(String ID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(RemindersTbl, MarkerID + " = ?", new String[] {ID});
+    }
 
+    public void AddNewReminder(String MarkerID, String ReminderText){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.query(RemindersTbl, new String[] {ReminderIDCol, ReminderTextCol}, MarkersIDCol+ " = ?", new String[]{ID}, null, null, null);
+        ContentValues values = new ContentValues();
 
-        return cursor;
+        values.put(MarkersIDCol, MarkerID);
+        values.put(ReminderTextCol, ReminderText);
+
+        db.insert(RemindersTbl, null, values);
     }
 
     public int ReturnMarkerID(String LatLong){
@@ -240,6 +251,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.delete(MarkersTbl, MarkerID + " = ?", new String[] {ID});
     }
 
+    public void RemoverMarkerAndReminders(String ID){
+        RemoveMarker(ID);
+        DeleteAllMarkerReminders(ID);
+    }
+
     public String GetMarkerPos (String ID){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -250,5 +266,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
         return  Position;
     }
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
 }
