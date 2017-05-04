@@ -364,7 +364,7 @@ class DBHelper extends SQLiteOpenHelper {
      * @param LatLong - the latLong of the marker
      * @return - the id value
      */
-    public int ReturnMarkerID(String LatLong){
+    int ReturnMarkerID(String LatLong){
         int i;
         SQLiteDatabase db = this.getWritableDatabase();
 
