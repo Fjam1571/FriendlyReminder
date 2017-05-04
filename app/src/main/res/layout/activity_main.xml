@@ -6,24 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.fjamtechnology.friendlyreminder.MainActivity">
 
-    <Button
-        android:id="@+id/ViewTut"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="73dp"
-        android:text="View Tutorial"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SignIn"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1" />
-
     <EditText
         android:id="@+id/Username"
         android:layout_width="wrap_content"

@@ -49,13 +49,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button Vid = (Button)findViewById(R.id.ViewTut);
-        Vid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, Vid.class));
-            }
-        });
+
 
     }
 
