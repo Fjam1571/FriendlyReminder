@@ -314,7 +314,7 @@ public class ReminderMap extends AppCompatActivity
         double lat, lon;
         int NumbMarkers = c.getCount();
 
-        mMap = map;
+
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         //// Checking For Markers //////////////////////////////////////////////////////////////////
