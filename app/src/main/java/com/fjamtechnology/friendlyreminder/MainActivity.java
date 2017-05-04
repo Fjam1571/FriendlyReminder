@@ -113,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Controls how the application reacts to the back button being pressed
+     */
+    @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Would You Like To Close Friendly Reminder?");

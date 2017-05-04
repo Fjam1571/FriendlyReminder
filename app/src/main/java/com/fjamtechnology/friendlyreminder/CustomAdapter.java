@@ -13,6 +13,9 @@ import android.widget.TextView;
  * Created by Franc on 5/3/2017.
  */
 
+/**
+ * adapter to populate list view
+ */
 public class CustomAdapter extends BaseAdapter {
 
     private final Activity context;
@@ -20,6 +23,12 @@ public class CustomAdapter extends BaseAdapter {
     private String[]  Title;
     private int[] imge;
 
+    /**
+     * the adapter
+     * @param context - context
+     * @param text1  - text
+     * @param imageIds
+     */
     public CustomAdapter(Activity context, String[] text1,int[] imageIds) {
         this.context=context;
         Title = text1;
@@ -27,6 +36,10 @@ public class CustomAdapter extends BaseAdapter {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public int getCount() {
         // TODO Auto-generated method stub
         return Title.length;

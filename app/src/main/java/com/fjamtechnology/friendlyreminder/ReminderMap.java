@@ -61,6 +61,10 @@ public class ReminderMap extends AppCompatActivity
     private LatLng mClickPos;
     String test = "test";
 
+    /**
+     * creation method
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +111,9 @@ public class ReminderMap extends AppCompatActivity
 
     }
 
+    /**
+     * controls what happens when theback button is pressed
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -131,6 +138,11 @@ public class ReminderMap extends AppCompatActivity
         }
     }
 
+    /**
+     * cretaion of options menu
+     * @param menu - the menu
+     * @return returns true completed
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -138,6 +150,11 @@ public class ReminderMap extends AppCompatActivity
         return true;
     }
 
+    /**
+     * an options item is selected
+     * @param item the item
+     * @return true
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -157,7 +174,11 @@ public class ReminderMap extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /**
+     * Navagation item is selected
+     * @param item the item selected
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -273,6 +294,10 @@ public class ReminderMap extends AppCompatActivity
         return true;
     }
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     *  once the google map is reday to use
+      */
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -551,6 +576,9 @@ public class ReminderMap extends AppCompatActivity
 
     }
 
+    /**
+     * method that populates the navigation menu
+     */
     public void PopulateMenu(){
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         Menu m = navView.getMenu();
@@ -599,6 +627,9 @@ public class ReminderMap extends AppCompatActivity
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    /**
+     * method that builds the google api for the map
+     */
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -608,6 +639,10 @@ public class ReminderMap extends AppCompatActivity
         mGoogleApiClient.connect();
     }
 
+    /**
+     * users location has changed
+     * @param location - the location
+     */
     @Override
     public void onLocationChanged(Location location) {
 
@@ -635,6 +670,9 @@ public class ReminderMap extends AppCompatActivity
 
     }
 
+    /**
+     * checks if the app has location permissions enabled
+     */
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     public boolean checkLocationPermission(){
         if (ContextCompat.checkSelfPermission(this,
@@ -667,6 +705,12 @@ public class ReminderMap extends AppCompatActivity
         }
     }
 
+    /**
+     * request permissions results
+     * @param requestCode the code for permission
+     * @param permissions the permissions
+     * @param grantResults the results
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -701,6 +745,10 @@ public class ReminderMap extends AppCompatActivity
         }
     }
 
+    /**
+     * connecting to google api
+     * @param bundle
+     */
     @Override
     public void onConnected(Bundle bundle) {
 
@@ -716,16 +764,29 @@ public class ReminderMap extends AppCompatActivity
 
     }
 
+    /**
+     * connection to api failed
+     * @param connectionResult
+     */
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
 
+    /**
+     * connection to api suspended
+     * @param i
+     */
     @Override
     public void onConnectionSuspended(int i) {
 
     }
 
+    /**
+     * dialog box for reminders
+     * @param Reminders - the reminders
+     * @param MarkerID - marker id for reminders
+     */
     public void DialogReminders(String Reminders, String MarkerID){
 
         //// Creating Dialog And View To Show All Reminders If Any In Window ////
@@ -856,6 +917,9 @@ public class ReminderMap extends AppCompatActivity
 
     }
 
+    /**
+     * controls the map animation of displaying all markers on screen when pressing the floating action button
+     */
     public void FabAnimateCamer(){
 
         LatLngBounds.Builder FabBuilder = new LatLngBounds.Builder();

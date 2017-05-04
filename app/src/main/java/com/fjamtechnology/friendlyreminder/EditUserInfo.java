@@ -21,6 +21,10 @@ public class EditUserInfo extends AppCompatActivity {
 
     DBHelper helper = new DBHelper(this);
 
+    /**
+     * creation method for instance
+     * @param savedInstanceState - the instance
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +132,12 @@ public class EditUserInfo extends AppCompatActivity {
     }
 
 
+    /**
+     * Verifys the two passwords field match
+     * @param UserID - the users id
+     * @param Pass - the users enetered password
+     * @return if they match
+     */
     private boolean VerifyUserPass(String UserID, String Pass){
         Boolean PassMatch;
         String UserPass;
@@ -141,6 +151,11 @@ public class EditUserInfo extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks if the users entered email is a valid email
+     * @param email  - the enetered email
+     * @return  if the email is valid
+     */
     public static boolean isEmailValid(String email) {
         boolean isValid = false;
 

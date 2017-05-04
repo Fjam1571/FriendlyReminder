@@ -9,6 +9,10 @@ import android.widget.VideoView;
 
 public class Vid extends AppCompatActivity {
 
+    /**
+     * creation mehtod
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -12,7 +12,7 @@ import org.mindrot.jbcrypt.BCrypt;
  * Created by Franc on 4/17/2017.
  */
 
-public class DBHelper extends SQLiteOpenHelper {
+class DBHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Friendly.db";
@@ -47,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String ReminderIDCol = "RemindersID", MarkersIDCol = "MarkersID", ReminderTextCol = "Reminder", ReminderCompleted = "Completed";
     private static final String MarkerNameCol = "MarkerName", LongLatCol = "LongLat", MarkerID ="MarkersID";
 
-    public DBHelper(Context context){
+    DBHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -74,7 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public String GetUserID(String Username){
+    String GetUserID(String Username){
         String UserID;
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -121,7 +121,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void ChangePass(String Pass, String UserID){
+    /**
+     * Method that is run when a user is changing their password
+     * @param Pass the users password
+     * @param UserID the users id
+     */
+     void ChangePass(String Pass, String UserID){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -131,7 +136,13 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(UserTbl,values, UserIDCol + " = ?", new String[]{UserID});
     }
 
-    public long ChangeEmail(String Email, String UserID){
+    /**
+     * method run for a user to change their email
+     * @param Email - the users new email
+     * @param UserID - the users userID
+     * @return ID - the user id
+     */
+    long ChangeEmail(String Email, String UserID){
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.query(UserTbl, new String[] {EmailCol}, EmailCol + " = ?", new String[]{Email}, null, null, null);
@@ -163,7 +174,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param Password  users password to be hashed
      * @return hash
      */
-    public String BCrypt(final String Password) {
+    String BCrypt(final String Password) {
         String hash = BCrypt.hashpw(Password, BCrypt.gensalt());
         return hash;
     }
@@ -174,7 +185,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param PasswordVerif hash in database
      * @return
      */
-    public Boolean VerifyPass(final String Password, final String PasswordVerif){
+    Boolean VerifyPass(final String Password, final String PasswordVerif){
         boolean PassMatch;
 
         PassMatch = BCrypt.checkpw(Password, PasswordVerif);
@@ -192,7 +203,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param Username  he users username
      * @return  if verified
      */
-    public String Verification(final String Username){
+    String Verification(final String Username){
         String Pass = null;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -214,7 +225,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public String VerifyUserPass(String UserID){
+    /**
+     * verify the users password
+     * @param UserID - the users id
+     * @return the pass
+     */
+    String VerifyUserPass(String UserID){
         String Pass = null;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -236,10 +252,10 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * methd that gets all LatLng locations for the user
+     * method that gets all LatLng locations for the user
      * @return cursor holding locations
      */
-    public Cursor getAllLocations(String UserID){
+    Cursor getAllLocations(String UserID){
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -248,6 +264,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    /**
+     * returns all reminders from the database through a cursor
+     * @param ID - the users id
+     * @return  cursor of reminders
+     */
     public Cursor getAllReminders(String ID){
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -257,6 +278,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    /**
+     * method that allows a user to set a reminder as being completed in the database
+     * @param ID - the reminder id
+     * @param Completed  - the completed value
+     */
     public void SetReminderCompletion (String ID, int Completed){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -267,11 +293,20 @@ public class DBHelper extends SQLiteOpenHelper {
         db.update(RemindersTbl,values, ReminderIDCol + " = ?", new String[]{ID});
     }
 
+    /**
+     * method that allows a user to delete a reminder from the database
+     * @param ID - the reminder id
+     */
     public void DeleteReminder(String ID){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(RemindersTbl, ReminderIDCol + " = ?", new String[] {ID});
     }
 
+    /***
+     * change the value of a reminder to another
+     * @param ID = reminder id
+     * @param Text - the new reminders text
+     */
     public void EditReminder(String ID, String Text){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -299,11 +334,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return id;
     }
 
+    /**
+     * Delete all reminders for a given marker
+     * @param ID - the markers id
+     */
     public void DeleteAllMarkerReminders(String ID){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(RemindersTbl, MarkerID + " = ?", new String[] {ID});
     }
 
+    /**
+     * Add a new reminder for a marker in database
+     * @param MarkerID - the marker id the reminder is going to
+     * @param ReminderText - the text of the reminder
+     */
     public void AddNewReminder(String MarkerID, String ReminderText){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -315,6 +359,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(RemindersTbl, null, values);
     }
 
+    /**
+     * returns the id of a marker
+     * @param LatLong - the latLong of the marker
+     * @return - the id value
+     */
     public int ReturnMarkerID(String LatLong){
         int i;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -327,17 +376,30 @@ public class DBHelper extends SQLiteOpenHelper {
         return i;
     }
 
-    public void RemoveMarker(String ID){
+    /**
+     * removing a marker form the database
+     * @param ID - id of the marker
+     */
+    private void RemoveMarker(String ID){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(MarkersTbl, MarkerID + " = ?", new String[] {ID});
     }
 
-    public void RemoverMarkerAndReminders(String ID){
+    /**
+     * remove a marker and all its associated rmeinders
+     * @param ID id of the marker
+     */
+    void RemoverMarkerAndReminders(String ID){
         RemoveMarker(ID);
         DeleteAllMarkerReminders(ID);
     }
 
-    public String GetMarkerPos (String ID){
+    /**
+     * returns the postion of a marker
+     * @param  - id of the marker
+     * @return the position of the marker (latlng)
+     */
+    String GetMarkerPos (String ID){
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor cursor = db.query(MarkersTbl, new String[] {LongLatCol}, MarkerID + " = ?", new String[]{ID}, null, null, null);
