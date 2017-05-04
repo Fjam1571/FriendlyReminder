@@ -90,7 +90,7 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Edit Account Information</string>
     <string name="title_activity_reminder_map">ReminderMap</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -176,4 +176,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_edit_user_info">EditUserInfo</string>
+    <string name="title_activity_vid">Vid</string>
 </resources>

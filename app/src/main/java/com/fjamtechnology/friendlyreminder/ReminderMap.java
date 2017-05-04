@@ -330,7 +330,7 @@ public class ReminderMap extends AppCompatActivity
                     lon = Double.parseDouble(LatLong[1]);
                     LatLng LatLngMarker = new LatLng(lat, lon);
 
-                    mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name)).showInfoWindow();
+                    mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLngMarker, 18));
 
                     //// Adding Bounds To Builder ////
@@ -353,7 +353,7 @@ public class ReminderMap extends AppCompatActivity
                     //// Adding Bounds To Builder ////
                     builderMapReset.include(LatLngMarker);
 
-                    mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name)).showInfoWindow();
+                    mMap.addMarker(new MarkerOptions().position(LatLngMarker).title(Name));
 
                     i++;
                     c.moveToNext();
@@ -383,6 +383,12 @@ public class ReminderMap extends AppCompatActivity
                 {
                     return false;
                 }else{
+                    DBHelper helper = new DBHelper(getApplicationContext());
+
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 18));
+
+                    Toast.makeText(getApplicationContext(),"Click On Info Window For Marker Options", Toast.LENGTH_LONG).show();
+
                     marker.showInfoWindow();
                     return true;
                 }
@@ -485,9 +491,10 @@ public class ReminderMap extends AppCompatActivity
                             c = db.getAllLocations(UserID);
 
                             //// Variables for Markers ///////
-                            String[] LatLong;
                             double lat, lon;
                             int NumbMarkers = c.getCount();
+                            String[] LatLong = new String[NumbMarkers];
+                            c.moveToFirst();
 
                             if(NumbMarkers == 0){
                                 int MarkerID;
@@ -506,8 +513,21 @@ public class ReminderMap extends AppCompatActivity
                                 mMap.addMarker(new MarkerOptions().position(latLng).title(MarkerName));
                                 //// Adding Item To Drawer From New Marker /////
                                 int MarkerOrder = MarkerID + 3;
-                                //m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
                                 PopulateMenu();
+
+                                for(int i = 0; i < NumbMarkers;){
+                                    //// Getting Variables From DB ////
+                                    LatLong = c.getString(2).split(",");
+                                    lat = Double.parseDouble(LatLong[0]);
+                                    lon = Double.parseDouble(LatLong[1]);
+                                    LatLng LatLngMarker = new LatLng(lat, lon);
+
+                                    //// Adding Bounds To Builder ////
+                                    builderNewMarker.include(LatLngMarker);
+                                    i++;
+                                    c.moveToNext();
+
+                                }
                                 LatLngBounds bounds = builderNewMarker.build();
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
                             }
@@ -555,7 +575,7 @@ public class ReminderMap extends AppCompatActivity
                 //// Declaring Temp Variables ////
                 MarkerName = c.getString(1);
                 MarkerID = c.getInt(0);
-                MarkerOrder = MarkerID + 2;
+                MarkerOrder = i + 3;
 
                 m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
 
@@ -573,7 +593,7 @@ public class ReminderMap extends AppCompatActivity
             m.add(2,2,2,"Delete Marker");
         }
 
-        m.add(4,4,MarkerOrder+1,"Logout").setIcon(R.drawable.logout);
+        m.add(4,4,NumbMarkers + 3,"Logout").setIcon(R.drawable.logout);
 
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////

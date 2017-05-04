@@ -60,10 +60,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fjamtechnology.friendlyreminder.ReminderMap" />
         </activity>
-
         <activity
             android:name=".EditUserInfo"
             android:label="@string/title_activity_edit_user_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Vid"
+            android:label="@string/title_activity_vid"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
