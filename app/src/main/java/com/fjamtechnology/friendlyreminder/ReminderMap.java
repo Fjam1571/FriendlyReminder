@@ -543,7 +543,7 @@ public class ReminderMap extends AppCompatActivity
 
         //// Variables for Markers ///////
         String MarkerName;
-        int MarkerID, MarkerOrder;
+        int MarkerID = 0, MarkerOrder = 0;
         int NumbMarkers = c.getCount();
 
         //// Checking For Markers //////////////////////////////////////////////////////////////////
@@ -573,7 +573,7 @@ public class ReminderMap extends AppCompatActivity
             m.add(2,2,2,"Delete Marker");
         }
 
-        m.add(4,4,NumbMarkers + 2,"Logout").setIcon(R.drawable.logout);
+        m.add(4,4,MarkerOrder+1,"Logout").setIcon(R.drawable.logout);
 
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
