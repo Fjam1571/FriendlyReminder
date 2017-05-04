@@ -23,7 +23,7 @@ public class Register extends AppCompatActivity {
     final String UnSuccesfulReg = "The Username Is Already Taken Or The Email Has Been Used To Register Already";
     final String EmptyUsername = "Please Enter A Username";
     final String InvalidEmail = "Please Enter A Valid Email";
-    final String InvalidPass = "Please Enter A Valid Password";
+    final String InvalidPass = "Please Enter A Valid Password That Meets The Displayed Requirements";
     final String PassDontMatch = "The Passwords Don't Match";
     final String NoEntries = "Please Fill Form To Register";
 

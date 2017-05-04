@@ -249,6 +249,7 @@ public class ReminderMap extends AppCompatActivity
 
     @Override
     public void onMapReady(GoogleMap map) {
+        mMap = map;
         PopulateMenu();
 
         LatLngBounds.Builder builderMapReset = new LatLngBounds.Builder();
@@ -264,7 +265,8 @@ public class ReminderMap extends AppCompatActivity
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
-                //mMap.setMyLocationEnabled(true);
+
+                mMap.setMyLocationEnabled(true);
             }
         }
         else {
