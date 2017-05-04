@@ -44,9 +44,18 @@ public class Reminders extends AppCompatActivity {
         Intent intent = new Intent(Reminders.this, ReminderMap.class);
         intent.putExtra("126516516513246", UpdatedUserID);
         startActivity(intent);
+        finish();
         return true;
     }
     /////////////////////////////////
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Reminders.this, ReminderMap.class);
+        intent.putExtra("126516516513246", UpdatedUserID);
+        startActivity(intent);
+        finish();
+    }
 
     public void PopulateListView(String MarkerID){
         lv = (ListView) findViewById(R.id.LV);

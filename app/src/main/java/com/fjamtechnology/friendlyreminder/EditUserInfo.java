@@ -1,5 +1,6 @@
 package com.fjamtechnology.friendlyreminder;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -131,6 +132,16 @@ public class EditUserInfo extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        String UpdatedUserID = UserID;
+
+        Intent intent = new Intent(EditUserInfo.this, ReminderMap.class);
+        intent.putExtra("126516516513246", UpdatedUserID);
+        startActivity(intent);
+        finish();
+    }
 
     /**
      * Verifys the two passwords field match

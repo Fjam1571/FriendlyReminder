@@ -67,7 +67,7 @@
         <activity
             android:name=".Vid"
             android:label="@string/title_activity_vid"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

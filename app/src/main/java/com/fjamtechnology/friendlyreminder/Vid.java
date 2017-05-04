@@ -1,5 +1,6 @@
 package com.fjamtechnology.friendlyreminder;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +34,12 @@ public class Vid extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(Vid.this, MainActivity.class));
+        finish();
     }
 
 }

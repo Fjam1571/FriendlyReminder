@@ -49,6 +49,12 @@ public class Register extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(Register.this, MainActivity.class));
+        finish();
+    }
+
     /**
      * code to insert a new user into the database
      */
@@ -93,6 +99,7 @@ public class Register extends AppCompatActivity {
                         try {
                             Thread.sleep(Toast.LENGTH_LONG);
                             startActivity(intent);
+                            finish();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

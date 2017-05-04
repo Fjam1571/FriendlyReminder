@@ -126,6 +126,7 @@ public class ReminderMap extends AppCompatActivity
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     startActivity(new Intent(ReminderMap.this, MainActivity.class));
+                    finish();
                 }
             });
             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -168,6 +169,7 @@ public class ReminderMap extends AppCompatActivity
             Intent intent = new Intent(ReminderMap.this, EditUserInfo.class);
             intent.putExtra("126516516513246", UpdatedUserID);
             startActivity(intent);
+            finish();
             return true;
         }
 
@@ -262,6 +264,7 @@ public class ReminderMap extends AppCompatActivity
                                     intent.putExtra("126516516513246", UserID);
                                     intent.putExtra("165165165165166", String.valueOf(item.getItemId()));
                                     startActivity(intent);
+                                    finish();
                                     break;
                             }
                         }
@@ -280,6 +283,7 @@ public class ReminderMap extends AppCompatActivity
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     startActivity(new Intent(ReminderMap.this, MainActivity.class));
+                    finish();
                 }
             });
             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -821,6 +825,7 @@ public class ReminderMap extends AppCompatActivity
                 intent.putExtra("126516516513246", UserID);
                 intent.putExtra("165165165165166", MarkerID);
                 startActivity(intent);
+                finish();
                 alert.cancel();
             }
         });

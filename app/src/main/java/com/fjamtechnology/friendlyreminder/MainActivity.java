@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, Register.class));
-                
+                finish();
             }
         });
         //////////////////////////
@@ -46,6 +46,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SignIn();
+            }
+        });
+
+        Button Vid = (Button)findViewById(R.id.BtnVid);
+        Vid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, Vid.class));
+                finish();
             }
         });
 
@@ -97,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ReminderMap.class);
                 intent.putExtra("126516516513246", UserID);
                 startActivity(intent);
+                finish();
 
                 PasswordText.setText("");
             }else if(SamePass == false){
@@ -115,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Would You Like To Close Friendly Reminder?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
             public void onClick(DialogInterface dialog, int id) {
-                finish();
                 System.exit(0);
             }
         });
