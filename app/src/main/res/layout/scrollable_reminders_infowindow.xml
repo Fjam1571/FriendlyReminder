@@ -6,21 +6,28 @@
 
     <Button
         android:id="@+id/Edit"
-        android:layout_width="129dp"
+        android:layout_width="108dp"
         android:layout_height="wrap_content"
         android:text="Edit Reminders"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentBottom="true" />
 
     <Button
         android:id="@+id/AddNewReminder"
-        android:layout_width="129dp"
+        android:layout_width="108dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/Edit"
         android:layout_toRightOf="@+id/Edit"
         android:text="Add New Reminder" />
+
+    <Button
+        android:id="@+id/DeleteMarker"
+        android:layout_width="108dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/AddNewReminder"
+        android:layout_toRightOf="@+id/AddNewReminder"
+        android:text="Delete Marker" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -37,14 +44,7 @@
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/DeleteMarker"
-        android:layout_width="129dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/AddNewReminder"
-        android:layout_toRightOf="@+id/AddNewReminder"
-        android:text="Delete Marker" />
+
 
 
 </RelativeLayout>

@@ -114,7 +114,20 @@ public class ReminderMap extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
             PopulateMenu();
         } else {
-            super.onBackPressed();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Would You Like To Logout?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    startActivity(new Intent(ReminderMap.this, MainActivity.class));
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
         }
     }
 
@@ -240,7 +253,21 @@ public class ReminderMap extends AppCompatActivity
             builder.create().show();
 
         }else if(item.getGroupId() == 4){
-            startActivity(new Intent(ReminderMap.this, MainActivity.class));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Would You Like To Logout?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    startActivity(new Intent(ReminderMap.this, MainActivity.class));
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
         }
 
         return true;
@@ -250,13 +277,13 @@ public class ReminderMap extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
-        PopulateMenu();
 
         LatLngBounds.Builder builderMapReset = new LatLngBounds.Builder();
 
         //// Creating Nav View To Populate Menu ///
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         Menu m = navView.getMenu();
+        m.clear();
 
 
         //Initialize Google Play Services
@@ -344,6 +371,7 @@ public class ReminderMap extends AppCompatActivity
             c.close();
         }
         ////////////////////////////////////////////////////////////////////////////////////////////
+        PopulateMenu();
 
         //// Marker Click Listener ////
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
