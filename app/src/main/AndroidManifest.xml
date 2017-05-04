@@ -52,10 +52,6 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ReminderView"
-            android:label="@string/title_activity_reminder_view"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".Reminders"
             android:label="@string/title_activity_reminders"
             android:parentActivityName=".ReminderMap"
@@ -64,6 +60,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.fjamtechnology.friendlyreminder.ReminderMap" />
         </activity>
+
+        <activity
+            android:name=".EditUserInfo"
+            android:label="@string/title_activity_edit_user_info"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

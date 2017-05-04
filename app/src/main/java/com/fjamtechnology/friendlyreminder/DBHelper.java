@@ -27,6 +27,7 @@ public class DBHelper extends SQLiteOpenHelper {
             " `RemindersID` INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " +
             " `MarkersID` INTEGER, " +
             " `Reminder` TEXT, " +
+            " `Completed` INTEGER DEFAULT 0, " +
             " FOREIGN KEY(`MarkersID`) REFERENCES Markers " +
             "); ";
     private static final String Sql_Create3 =
@@ -43,7 +44,7 @@ public class DBHelper extends SQLiteOpenHelper {
     /////////Table And ID Names ////////////////////////////////////////////////////////////////////
     private static final String UserTbl = "User", RemindersTbl = "Reminders", MarkersTbl = "Markers";
     private static final String UserIDCol = "idUser", UsernameCol = "Username", PasswordCol = "Password", EmailCol = "Email";
-    private static final String ReminderIDCol = "RemindersID", MarkersIDCol = "MarkersID", ReminderTextCol = "Reminder";
+    private static final String ReminderIDCol = "RemindersID", MarkersIDCol = "MarkersID", ReminderTextCol = "Reminder", ReminderCompleted = "Completed";
     private static final String MarkerNameCol = "MarkerName", LongLatCol = "LongLat", MarkerID ="MarkersID";
 
     public DBHelper(Context context){
@@ -120,6 +121,41 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+    public void ChangePass(String Pass, String UserID){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(PasswordCol, Pass);
+
+        db.update(UserTbl,values, UserIDCol + " = ?", new String[]{UserID});
+    }
+
+    public long ChangeEmail(String Email, String UserID){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.query(UserTbl, new String[] {EmailCol}, EmailCol + " = ?", new String[]{Email}, null, null, null);
+
+        int AlreadyInSystem = cursor.getCount();
+        cursor.close();
+        long id;
+
+        if(AlreadyInSystem > 0){
+            id = -1;
+            return id;
+        }else{
+            ContentValues values = new ContentValues();
+
+            values.put(EmailCol, Email);
+
+            id = db.update(UserTbl,values, UserIDCol + " = ?", new String[]{UserID});
+
+            return id;
+        }
+
+
+    }
+
     //////// Password Encryption BCrypt ///////////////////////////////////////////////////////////////
 
     /**
@@ -127,7 +163,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * @param Password  users password to be hashed
      * @return hash
      */
-    private String BCrypt(final String Password) {
+    public String BCrypt(final String Password) {
         String hash = BCrypt.hashpw(Password, BCrypt.gensalt());
         return hash;
     }
@@ -178,6 +214,27 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public String VerifyUserPass(String UserID){
+        String Pass = null;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.query
+                (UserTbl, new String[] {PasswordCol}, UserIDCol + " = ?", new String[]{UserID}, null, null, null);
+
+        cursor.moveToFirst();
+
+        if(cursor.getCount() <= 0){
+            cursor.close();
+
+            return Pass;
+        }else{
+            Pass = cursor.getString(0);
+
+            return Pass;
+        }
+    }
+
     /**
      * methd that gets all LatLng locations for the user
      * @return cursor holding locations
@@ -195,11 +252,35 @@ public class DBHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor cursor = db.query(RemindersTbl, new String[] {ReminderIDCol, ReminderTextCol}, MarkersIDCol+ " = ?", new String[]{ID}, null, null, null);
+        Cursor cursor = db.query(RemindersTbl, new String[] {ReminderIDCol, ReminderTextCol, ReminderCompleted}, MarkersIDCol+ " = ?", new String[]{ID}, null, null, null);
 
         return cursor;
     }
 
+    public void SetReminderCompletion (String ID, int Completed){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(ReminderCompleted, Completed);
+
+        db.update(RemindersTbl,values, ReminderIDCol + " = ?", new String[]{ID});
+    }
+
+    public void DeleteReminder(String ID){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(RemindersTbl, ReminderIDCol + " = ?", new String[] {ID});
+    }
+
+    public void EditReminder(String ID, String Text){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(ReminderTextCol, Text);
+
+        db.update(RemindersTbl,values, ReminderIDCol + " = ?", new String[]{ID});
+    }
 
     //// Marker DB Options///////////////////////////////////////////////////////////////////////////
     public int InsertNewMarker(String MarkerName, String MarkerLatLong, String UserID){

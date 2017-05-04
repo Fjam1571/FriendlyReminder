@@ -145,7 +145,7 @@ public class Register extends AppCompatActivity {
     public static boolean isPassValid(String Pass) {
         boolean isValid = false;
 
-        String expression1 = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{5,}$";
+        String expression1 = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{12,}$";
         CharSequence inputStr = Pass;
 
         Pattern pattern1 = Pattern.compile(expression1, Pattern.CASE_INSENSITIVE);

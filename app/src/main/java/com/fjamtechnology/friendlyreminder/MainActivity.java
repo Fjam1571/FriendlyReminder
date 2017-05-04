@@ -1,11 +1,14 @@
 package com.fjamtechnology.friendlyreminder;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,11 +70,7 @@ public class MainActivity extends AppCompatActivity {
         EmptyUsername = Username.isEmpty();
         EmptyPassword = Password.isEmpty();
 
-        Intent intent = new Intent(MainActivity.this, ReminderMap.class);
-        intent.putExtra("126516516513246", "1");
-        startActivity(intent);
-
-        /*if(EmptyUsername == true && EmptyPassword == true){
+        if(EmptyUsername == true && EmptyPassword == true){
             Toast.makeText(getApplicationContext(), EmptyUsernamePassword, Toast.LENGTH_LONG).show();
         }else if(EmptyUsername == true){
             Toast.makeText(getApplicationContext(), EmptyUsernameSTR, Toast.LENGTH_LONG).show();
@@ -93,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
                 String UserID = helper.GetUserID(Username);
 
-                Toast.makeText(getApplicationContext(), UserID, Toast.LENGTH_LONG).show();
-
                 Intent intent = new Intent(MainActivity.this, ReminderMap.class);
                 intent.putExtra("126516516513246", UserID);
                 startActivity(intent);
@@ -105,9 +102,25 @@ public class MainActivity extends AppCompatActivity {
                 PasswordText.setText("");
             }
 
-        }*/
+        }
     }
 
-
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Would You Like To Close Friendly Reminder?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+                System.exit(0);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
 
 }

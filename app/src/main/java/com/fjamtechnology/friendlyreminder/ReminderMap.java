@@ -134,6 +134,10 @@ public class ReminderMap extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            String UpdatedUserID = UserID;
+            Intent intent = new Intent(ReminderMap.this, EditUserInfo.class);
+            intent.putExtra("126516516513246", UpdatedUserID);
+            startActivity(intent);
             return true;
         }
 
@@ -158,6 +162,7 @@ public class ReminderMap extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "Please Do A Long Click On Map To Add New Marker", Toast.LENGTH_LONG).show();
             }else if(item.getItemId() == 2){
                 m.removeGroup(2);
+                m.removeGroup(4);
                 m.add(3,3,1,"Done");
                 m.setGroupCheckable(1, true, true);
                 Toast.makeText(getApplicationContext(), "Double Click Marker To Delete", Toast.LENGTH_LONG).show();
@@ -194,7 +199,7 @@ public class ReminderMap extends AppCompatActivity
             m.removeGroup(3);
             m.removeGroup(2);
             PopulateMenu();
-        }else if(m.getItem(0).getGroupId() == 2){
+        }else if(m.getItem(0).getGroupId() == 2 && item.getGroupId() == 1){
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Go To:");
@@ -234,6 +239,8 @@ public class ReminderMap extends AppCompatActivity
             });
             builder.create().show();
 
+        }else if(item.getGroupId() == 4){
+            startActivity(new Intent(ReminderMap.this, MainActivity.class));
         }
 
         return true;
@@ -371,8 +378,6 @@ public class ReminderMap extends AppCompatActivity
                     int ID = DbHelper.ReturnMarkerID(Pos);
                     String IDSTR = String.valueOf(ID);
 
-                    //Toast.makeText(getApplicationContext(), Pos, Toast.LENGTH_LONG).show();
-
                     Cursor cursor = DbHelper.getAllReminders(IDSTR);
                     int NumbReminders = cursor.getCount();
                     String Reminders = "";
@@ -380,11 +385,17 @@ public class ReminderMap extends AppCompatActivity
                     if(NumbReminders > 0){
                         cursor.moveToFirst();
                         for(int i = 0; i < NumbReminders;){
-                            //// Declaring Temp Variables ////
-                            Reminders += "\n\t\t\t\t\t\t" + cursor.getString(1);
-                            i++;
-                            cursor.moveToNext();
-
+                            if(cursor.getInt(2) == 0){
+                                //// Declaring Temp Variables ////
+                                Reminders += "\n\t\t\t\t\t\t" + cursor.getString(1);
+                                i++;
+                                cursor.moveToNext();
+                            }else{
+                                //// Declaring Temp Variables ////
+                                Reminders += "\n\t\t\t\t\t\t" + cursor.getString(1) + " (Completed)";
+                                i++;
+                                cursor.moveToNext();
+                            }
                         }
 
                     }else{
@@ -421,7 +432,8 @@ public class ReminderMap extends AppCompatActivity
 
                         //You will get as string input data in this variable.
                         String MarkerName = input.getEditableText().toString();
-                        if(MarkerName.isEmpty()){
+                        String NotEmpty = MarkerName.replace(" ", "");
+                        if(MarkerName.isEmpty() || NotEmpty == ""){
                             AlertDialog.Builder alert2 = new AlertDialog.Builder(ReminderMap.this);
                             alert2.setTitle("Did Not Enter Name For Marker"); //Set Alert dialog title here
                             alert2.setMessage("Please Make Sure You Have Entered A Name For Your New Marker");
@@ -454,7 +466,8 @@ public class ReminderMap extends AppCompatActivity
                                 //// Adding Item To Drawer From New Marker /////
                                 int MarkerOrder = MarkerID + 3;
                                 builderNewMarker.include(latLng);
-                                m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
+                                //m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
+                                PopulateMenu();
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
                             }else{
                                 int MarkerID;
@@ -463,7 +476,8 @@ public class ReminderMap extends AppCompatActivity
                                 mMap.addMarker(new MarkerOptions().position(latLng).title(MarkerName));
                                 //// Adding Item To Drawer From New Marker /////
                                 int MarkerOrder = MarkerID + 3;
-                                m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
+                                //m.add(1, MarkerID, MarkerOrder, MarkerName).setIcon(R.drawable.green_marker);
+                                PopulateMenu();
                                 LatLngBounds bounds = builderNewMarker.build();
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
                             }
@@ -528,6 +542,9 @@ public class ReminderMap extends AppCompatActivity
             m.add(2,1,1,"Add Marker");
             m.add(2,2,2,"Delete Marker");
         }
+
+        m.add(4,4,NumbMarkers + 2,"Logout").setIcon(R.drawable.logout);
+
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -802,8 +819,6 @@ public class ReminderMap extends AppCompatActivity
         String[] LatLong;
         double lat, lon;
         int NumbMarkers = c.getCount();
-
-        Toast.makeText(getApplicationContext(),String.valueOf(NumbMarkers),Toast.LENGTH_LONG).show();
 
         //// Checking For Markers //////////////////////////////////////////////////////////////////
         if(NumbMarkers > 0){
